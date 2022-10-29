@@ -4,7 +4,7 @@ const PORT = process.env.PORT || 3000;
 const server = require("http").createServer(app);
 const io = require("socket.io")(server, {
   cors: {
-    origin: "https://localhost:5173",
+    origin: "http://127.0.0.1:5173",
   },
 });
 
