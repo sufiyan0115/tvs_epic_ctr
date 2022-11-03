@@ -10,26 +10,7 @@ const TinyEditor = () => {
   });
  
 
-  // useEffect(()=>{
-     
-  // let editorIframe = document.querySelector("iframe");
-  // if (editorIframe) {
-  //   const editorDom = editorIframe.contentDocument;
-  //   if (editorDom) {
-  //     const cloneEditorDom = editorDom.cloneNode(true);
-  //     console.log(cloneEditorDom)
-  //     const inputs = editorDom.getElementsByTagName("input");
-  //     for (let input of inputs) {
-  //       input.addEventListener("input", () => {
-  //         console.log("Focussed biatches");
-  //         input.placeholder = input.value;
-  //       });
-  //     }
-  //   }
-  // }
-  
-  // })
-  
+
 
   const handleChange = (content: string, editor: any) => {
     setState({ content,
@@ -40,6 +21,8 @@ const TinyEditor = () => {
   const handleSubmit = (event: any) => {
        
   let editorIframe = document.querySelector("iframe");
+  const bekarFooter: HTMLDivElement = document.querySelector(".tox-statusbar")!;
+  bekarFooter.style.display = "none";
   if (editorIframe) {
     const editorDom = editorIframe.contentDocument;
     if (editorDom) {
@@ -52,8 +35,8 @@ const TinyEditor = () => {
         input.value = input.value;
       }
       const oldHtml = editorDom.body.innerHTML;
-      console.log(editorDom.body.innerHTML)
-      console.log(oldHtml)
+      // console.log(editorDom.body.innerHTML)
+      // console.log(oldHtml)
     }
   }
 
@@ -61,12 +44,13 @@ const TinyEditor = () => {
   };
 
   return (
-    <form className="px-7 pt-2" id="99" onSubmit={handleSubmit}>
+    <div className="px-7 pt-2 flex items-center flex-col" onSubmit={handleSubmit}>
       <Editor
         apiKey="q1l0wbw69iya46bmue4pwj4o4si6utmsxxt5eqc8ppifonkn"
         value={state.content}
         init={{
-          height: 300,
+          height: 1263,
+          width: 892.5,
           menubar: true,
           content_css: "/tinymce/EditorStyles.css",
           external_plugins: {
@@ -80,7 +64,7 @@ const TinyEditor = () => {
       <div dangerouslySetInnerHTML={{ __html: state.display }}></div>
       <button type="submit" onClick={handleSubmit}>Click Me</button>
       <br />
-    </form>
+    </div>
   );
 };
 
