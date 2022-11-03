@@ -3,7 +3,10 @@ const Schema = mongoose.Schema;
 const opts = { toJSON: { virtuals: true } };
 const schema = new Schema(
   {
-    document: String,
+    document: {
+      type: String,
+      required: true,
+    },
   },
   opts
 );
