@@ -2,7 +2,10 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
-const Template = require("./Models/template");
+const Template = require("./models/template");
+const ExceptionHandler = require("./core/ExceptionHandler");
+const ValidationException = require("./exceptions/ValidationException");
+const encryptPdf = require("./hummus");
 const app = express();
 const PORT = process.env.PORT || 3000;
 const server = require("http").createServer(app);
@@ -38,11 +41,23 @@ io.on("connection", (socket) => {
 });
 app.post("/add", async (req, res) => {
   try {
+    const { document } = req.body;
+    if (!document) throw new ValidationException({});
     const newTemplate = new Template(req.body);
     await newTemplate.save();
     res.send(newTemplate);
-  } catch (e) {
-    res.status(500).send(e);
+  } catch (err) {
+    const e = ExceptionHandler(err);
+    res.status(e.code).json(e);
+  }
+});
+app.post("/encrypt", (req, res) => {
+  try {
+    encryptPdf("./test/input.pdf", "./test/output1.pdf");
+    res.send("Encrypted");
+  } catch (err) {
+    const e = ExceptionHandler(err);
+    res.status(e.code).json(e);
   }
 });
 server.listen(PORT, () => {

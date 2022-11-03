@@ -1,10 +1,17 @@
-const HummusRecipe = require('hummus-recipe');
-const pdfDoc = new HummusRecipe('./test/input.pdf', './test/output1.pdf');
-
-pdfDoc
-    .encrypt({
-        userPassword: '123',
-        ownerPassword: '1234',
-        userProtectionFlag: 4
-    })
-    .endPDF();
+const HummusRecipe = require("hummus-recipe");
+const InternalServerException = require("./exceptions/InternalServerException");
+const encryptPdf = (input, output) => {
+  try {
+    const pdfDoc = new HummusRecipe(input, output);
+    pdfDoc
+      .encrypt({
+        userPassword: "123",
+        ownerPassword: "1234",
+        userProtectionFlag: 4,
+      })
+      .endPDF();
+  } catch (err) {
+    throw new InternalServerException({ message: err.message });
+  }
+};
+module.exports = encryptPdf;
