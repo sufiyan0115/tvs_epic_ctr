@@ -27,18 +27,35 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
+
 const io = require("socket.io")(server, {
   cors: {
     origin: "http://127.0.0.1:5173",
   },
 });
 
-io.on("connection", (socket) => {
-  console.log("A user connected");
-  socket.on("disconnect", (socket) => {
-    console.log("A user disconnected");
-  });
-});
+io.on("connection", socket => {
+  console.log("Connected")
+  socket.on("get-document", async id => {
+    const template = await findOrCreateTemplate(id)
+    socket.join(id)
+    socket.emit("load-document", template.data)
+    socket.on("save-document", async data => {
+      await Template.findOneAndUpdate({id}, { data })
+    })
+  })
+})
+
+async function findOrCreateTemplate(id) {
+  if (id == null) return
+
+  const document = await Template.findOne({id})
+  if (document) return document
+  return await Template.create({id, data: " " })
+}
+
+
+
 app.post("/add", async (req, res) => {
   try {
     const { document } = req.body;

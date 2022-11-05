@@ -1,8 +1,8 @@
 import {  useState } from "react";
 
 const InputDialog = () => {
-    const [fieldName,setFieldName] = useState('');
-    const [placeHolder, setPlaceHolder] = useState('');
+    const [fieldName,setFieldName] = useState(" ");
+    const [placeHolder, setPlaceHolder] = useState(" ");
 
 
   const fieldNameChangeHandler = (event: any)=>{
@@ -17,7 +17,7 @@ const InputDialog = () => {
       {
         mceAction: "addInputField",
         data: {
-          content: `<input name="${fieldName}" placeholder="${placeHolder}" >`,
+          content: `<input disabled placeholder="${placeHolder}">`,
         },
       },
       "*"
