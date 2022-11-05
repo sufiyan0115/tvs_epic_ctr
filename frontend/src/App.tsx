@@ -7,14 +7,6 @@ import { Route, Routes, Navigate } from "react-router-dom";
 import { v4 as uuidV4 } from "uuid";
 
 const App = () => {
-  // useEffect(()=>{
-  //   const s = io("http://localhost:3000");
-
-  //   return ()=>{
-  //     s.disconnect()
-  //   }
-
-  // },[])
 
   return (
     <>
