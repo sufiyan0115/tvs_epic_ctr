@@ -45,7 +45,6 @@ const io = require("socket.io")(server, {
 io.on("connection", (socket) => {
   console.log("Connected");
   socket.on("get-document", async (id) => {
-    console.log("agaya request get-doc");
     try {
       const template = await findOrCreateTemplate(id);
       socket.join(id);
@@ -55,8 +54,8 @@ io.on("connection", (socket) => {
         await Template.findOneAndUpdate({ id }, { data });
       });
     } catch (err) {
-      console.log("Error because of tanwir bakchodi", err);
       const e = ExceptionHandler(err);
+      console.log(e);
       socket.emit("error", e);
     }
   });
@@ -97,7 +96,7 @@ app.get("/getData", async (req, res) => {
     if (!id) throw new BadRequestException({ message: "Id is missing" });
     const template = await Template.findOne({ id });
     if (!template)
-      throw new ResourceNotFoundException({ message: "Template Not found" });
+      throw new ResourceNotFoundException({ resouceName: "Template" });
     res.json(template);
   } catch (err) {
     const e = ExceptionHandler(err);
