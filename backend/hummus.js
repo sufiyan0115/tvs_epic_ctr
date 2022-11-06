@@ -10,6 +10,7 @@ const encryptPdf = (input, output) => {
         userProtectionFlag: 4,
       })
       .endPDF();
+    return pdfDoc;
   } catch (err) {
     throw new InternalServerException({ message: err.message });
   }

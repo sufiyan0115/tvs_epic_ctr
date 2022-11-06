@@ -1,10 +1,8 @@
-const Template = require("../Models/template");
-const ExceptionHandler = require("../core/ExceptionHandler");
+const Template = require("../models/template");
 const ValidationException = require("../exceptions/ValidationException");
 const findOrCreateTemplate = async (id) => {
   try {
     if (id == null) return;
-
     const document = await Template.findOne({ id });
     if (document) return document;
     return await Template.create({ id, data: " " });
