@@ -3,6 +3,14 @@
 * Includes image captions using the HTML5 figure element.
 */
 
+.mce-content-body{
+  line-height: 1.4 !important;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12pt;
+  width: 856px;
+  margin: 16px;
+}
+
 input{
   border: none;
   border-bottom: solid black 2px;
@@ -10,6 +18,10 @@ input{
   font-size: 12pt;
   width: 166.4px;
   outline: none;
+}
+
+.mce-content-body p{
+  margin: 16px 0 16px 0;
 }
 
 .divEditable {
@@ -23,22 +35,6 @@ input{
   min-width: 100px !important;
 }
 
-
-body {
-font-family: Arial, Helvetica, sans-serif;
-font-size: 12pt;
-line-height: 1.4;
-margin: 1rem;
-}
-
-.loadingText{
-  color: gray;
-}
-
-.mce-content-body{
-  width: 856px;
-  margin: 16px;
-}
 
 figure.image {
     display: inline-block;
@@ -286,5 +282,4 @@ figure.image {
     margin-right: 1.5rem;
     padding-right: 1rem;
   }
-  
   
