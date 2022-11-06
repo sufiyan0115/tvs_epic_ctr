@@ -1,9 +1,12 @@
 import { Editor } from "@tinymce/tinymce-react";
 import { useState, useEffect, useRef } from "react";
-import { io } from "socket.io-client";
-import { useParams } from "react-router-dom";
+=======
+import { io } from "socket.io-client"
+import { useParams } from "react-router-dom"
+import { Link } from "react-router-dom";
 
-const TinyEditor = () => {
+
+const TinyEditor = (props : any) => {
   const [content, _setContent] = useState("");
   const contentRef = useRef(content);
   const editorRef = useRef(null);
@@ -15,14 +18,14 @@ const TinyEditor = () => {
   const { id: documentId } = useParams();
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const s = io("http://localhost:3000");
-    setSocket(s);
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
-
+=======
+  useEffect(()=>{
+     const s = io("http://localhost:3000");
+     setSocket(s);
+    return ()=>{
+      s.disconnect();
+    }
+  },[])
   useEffect(() => {
     if (socket == null) return;
 
@@ -53,24 +56,7 @@ const TinyEditor = () => {
   };
 
   const handleSubmit = (event: any) => {
-    let editorIframe = document.querySelector("iframe");
-    const bekarFooter: HTMLDivElement =
-      document.querySelector(".tox-statusbar")!;
-    bekarFooter.style.display = "none";
-    if (editorIframe) {
-      const editorDom = editorIframe.contentDocument;
-      if (editorDom) {
-        // const cloneEditorDom = editorDom.cloneNode(true);
-        const inputs = editorDom.getElementsByTagName("input");
-        // console.log(cloneEditorDom)
-        // console.log(editorDom)
-        for (let input of inputs) {
-          input.placeholder = input.value;
-        }
-        console.log(editorDom.body.innerHTML);
-        // console.log(oldHtml)
-      }
-    }
+
 
     event.preventDefault();
   };
@@ -83,29 +69,37 @@ const TinyEditor = () => {
       <Editor
         ref={editorRef}
         apiKey="q1l0wbw69iya46bmue4pwj4o4si6utmsxxt5eqc8ppifonkn"
-        value={isLoading ? "<h1>Ruk JA BSDK</h1>" : content}
+        disabled = {isLoading}
+        value={isLoading ? "<h3 class=loadingText >Fetching the template</h3>" : content}
         init={{
           height: 1263,
           width: 892.5,
           menubar: true,
           content_css: "/tinymce/EditorStyles.css",
-          plugins: "export image editimage lists checklist preview table",
+          setup: (editor)=>{
+            editor.on('ExecCommand', function(e) {
+              if(e.command==="mceInsertTable")
+              {
+                const curr = editor.getContent();
+                editor.setContent(`${curr}<p></p>`);
+              }
+            });
+          },
+          plugins: " export image editimage lists checklist preview table",
           external_plugins: {
             inputField: "/tinymce/inputField.js",
           },
-          custom_ui_selector: ".my-custom-button",
           table_style_by_css: true,
-          table_toolbar:
-            "tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol",
-          toolbar:
-            "inputField  undo redo export image editimage bullist numlist checklist preview | styles fontfamily fontsize | bold italic underline forecolor | alignleft aligncenter alignright alignjustify | lineheight indent outdent",
+
+          table_toolbar: 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol',
+          toolbar: "inputField undo redo export image editimage bullist numlist checklist preview | styles fontfamily fontsize | bold italic underline forecolor | alignleft aligncenter alignright alignjustify | lineheight indent outdent",
         }}
         onEditorChange={handleChange}
       />
       <button type="submit" onClick={handleSubmit}>
-        Preview Template
+=======
+        <Link to={`/template/preview/${documentId}`}>Preview Template</Link>
       </button>
-      <div dangerouslySetInnerHTML={{ __html: content }}></div>
       <br />
     </div>
   );
