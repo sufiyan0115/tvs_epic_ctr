@@ -2,9 +2,10 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
-const Template = require("./models/template");
+const Template = require("./Models/template");
 const ExceptionHandler = require("./core/ExceptionHandler");
 const ValidationException = require("./exceptions/ValidationException");
+const findOrCreateTemplate = require("./utils/findOrCreateTemplate");
 const encryptPdf = require("./hummus");
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -34,49 +35,32 @@ const io = require("socket.io")(server, {
   },
 });
 
-io.on("connection", socket => {
-  console.log("Connected")
-  socket.on("get-document", async id => {
-    const template = await findOrCreateTemplate(id)
-    socket.join(id)
-    socket.emit("load-document", template.data)
-    socket.on("save-document", async data => {
-      await Template.findOneAndUpdate({id}, { data })
-    })
-  })
-})
-
-async function findOrCreateTemplate(id) {
-  if (id == null) return
-
-  const document = await Template.findOne({id})
-  if (document) return document
-  return await Template.create({id, data: " " })
-}
-
-
-
-app.post("/add", async (req, res) => {
-  try {
-    const { document } = req.body;
-    if (!document) throw new ValidationException({});
-    const newTemplate = new Template(req.body);
-    await newTemplate.save();
-    res.send(newTemplate);
-  } catch (err) {
-    const e = ExceptionHandler(err);
-    res.status(e.code).json(e);
-  }
+io.on("connection", (socket) => {
+  console.log("Connected");
+  socket.on("get-document", async (id) => {
+    try {
+      const template = await findOrCreateTemplate(id);
+      socket.join(id);
+      socket.emit("load-document", template.data);
+      socket.on("save-document", async (data) => {
+        await Template.findOneAndUpdate({ id }, { data });
+      });
+    } catch (err) {
+      const e = ExceptionHandler(err);
+      socket.emit("error", e);
+    }
+  });
 });
-app.post("/encrypt", (req, res) => {
-  try {
-    encryptPdf("./test/input.pdf", "./test/output1.pdf");
-    res.send("Encrypted");
-  } catch (err) {
-    const e = ExceptionHandler(err);
-    res.status(e.code).json(e);
-  }
-});
+
+// app.post("/encrypt", (req, res) => {
+//   try {
+//     encryptPdf("./test/input.pdf", "./test/output1.pdf");
+//     res.send("Encrypted");
+//   } catch (err) {
+//     const e = ExceptionHandler(err);
+//     res.status(e.code).json(e);
+//   }
+// });
 server.listen(PORT, () => {
   console.log(`Server Started at ${PORT}`);
 });
