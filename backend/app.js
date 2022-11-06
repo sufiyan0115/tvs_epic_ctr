@@ -1,11 +1,18 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const fs = require("fs");
 const cors = require("cors");
 const path = require("path");
+const ejs = require("ejs");
 const Template = require("./models/template");
 const ExceptionHandler = require("./core/ExceptionHandler");
 const ValidationException = require("./exceptions/ValidationException");
+const ResourceNotFoundException = require("./exceptions/ResourceNotFoundException");
+const BadRequestException = require("./exceptions/BadRequestException");
+const findOrCreateTemplate = require("./utils/findOrCreateTemplate");
 const encryptPdf = require("./hummus");
+const { generatePdf } = require("./utils/pdfGenerator");
+const user = require("./routes/user");
 const app = express();
 const PORT = process.env.PORT || 3000;
 const server = require("http").createServer(app);
@@ -27,6 +34,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
+app.set("view engine", "ejs");
 
 const io = require("socket.io")(server, {
   cors: {
@@ -34,44 +42,63 @@ const io = require("socket.io")(server, {
   },
 });
 
-io.on("connection", socket => {
-  console.log("Connected")
-  socket.on("get-document", async id => {
-    const template = await findOrCreateTemplate(id)
-    socket.join(id)
-    socket.emit("load-document", template.data)
-    socket.on("save-document", async data => {
-      await Template.findOneAndUpdate({id}, { data })
-    })
-  })
-})
+io.on("connection", (socket) => {
+  console.log("Connected");
+  socket.on("get-document", async (id) => {
+    console.log("agaya request get-doc");
+    try {
+      const template = await findOrCreateTemplate(id);
+      socket.join(id);
+      console.log(template.data);
+      socket.emit("load-document", template.data);
+      socket.on("save-document", async (data) => {
+        await Template.findOneAndUpdate({ id }, { data });
+      });
+    } catch (err) {
+      console.log("Error because of tanwir bakchodi", err);
+      const e = ExceptionHandler(err);
+      socket.emit("error", e);
+    }
+  });
+});
 
-async function findOrCreateTemplate(id) {
-  if (id == null) return
-
-  const document = await Template.findOne({id})
-  if (document) return document
-  return await Template.create({id, data: " " })
-}
-
-
-
-app.post("/add", async (req, res) => {
+app.use("/", user);
+app.get("/pdf", async (req, res) => {
   try {
-    const { document } = req.body;
-    if (!document) throw new ValidationException({});
-    const newTemplate = new Template(req.body);
-    await newTemplate.save();
-    res.send(newTemplate);
+    const html = await ejs.renderFile(
+      path.join(__dirname, "views", "test.ejs")
+    );
+    const pdf = await generatePdf(html);
+    fs.writeFileSync(
+      path.join(__dirname, "test", "normal", "normal_data.pdf"),
+      pdf
+    );
+    const inputFile = path.join(__dirname, "test", "normal", "normal_data.pdf");
+    const outputFile = path.join(
+      __dirname,
+      "test",
+      "encrypted",
+      "encrypted_data.pdf"
+    );
+    const result = encryptPdf(inputFile, outputFile);
+    res.set({
+      "Content-Type": "application/pdf",
+    });
+    res.download(outputFile);
   } catch (err) {
+    // console.log(err);
     const e = ExceptionHandler(err);
     res.status(e.code).json(e);
   }
 });
-app.post("/encrypt", (req, res) => {
+app.get("/getData", async (req, res) => {
   try {
-    encryptPdf("./test/input.pdf", "./test/output1.pdf");
-    res.send("Encrypted");
+    const { id } = req.body;
+    if (!id) throw new BadRequestException({ message: "Id is missing" });
+    const template = await Template.findOne({ id });
+    if (!template)
+      throw new ResourceNotFoundException({ message: "Template Not found" });
+    res.json(template);
   } catch (err) {
     const e = ExceptionHandler(err);
     res.status(e.code).json(e);
