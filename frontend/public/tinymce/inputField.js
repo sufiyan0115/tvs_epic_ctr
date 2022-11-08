@@ -11,10 +11,6 @@ tinymce.PluginManager.add("inputField", (editor, url) => {
     }
   });
 
-  // const openDialog = () => {
-  //   editor.insertContent(`<div contentEditable class="divEditable">Write a description</div>`);
-  // };
-
   /* Add a button that opens a window */
   editor.ui.registry.addButton("inputField", {
     text: "Input Field",
