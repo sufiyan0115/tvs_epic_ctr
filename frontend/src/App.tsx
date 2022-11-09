@@ -15,7 +15,7 @@ const App = () => {
           <Route path="/" element={<LandingPage />}></Route>
           <Route
             path="/template/draft"
-            element={<Navigate to={`/template/draft/${uuidV4()}`} />}
+            element={<Navigate replace to={`/template/draft/${uuidV4()}`} />}
           ></Route>
           <Route path="/template/draft/:id" element={<DraftTemplatePage  />}></Route>
           <Route path="/template/preview/:id" element={<PreviewTemplatePage />}></Route>

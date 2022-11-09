@@ -17,7 +17,7 @@ const InputDialog = () => {
       {
         mceAction: "addInputField",
         data: {
-          content: `<input disabled contentEditable placeholder="${placeHolder}">`,
+          content: `<input class="editorInput" disabled contentEditable placeholder="${placeHolder}" />`,
         },
       },
       "*"
