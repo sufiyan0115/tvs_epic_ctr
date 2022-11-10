@@ -29,7 +29,11 @@ const schema = new Schema(
       required: true,
       unique: true,
     },
+    status: {
+      type: String,
+      required: true,
+    },
   },
   opts
 );
-module.exports = mongoose.model("PendingTemplate", schema);
+module.exports = mongoose.model("Template", schema);

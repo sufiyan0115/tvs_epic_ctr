@@ -1,20 +1,113 @@
 const express = require("express");
 const router = express.Router();
-const DraftTemplate = require("../models/draftTemplate");
-const PendingTemplate = require("../models/pendingTempate");
+const Template = require("../models/template");
+const ArchivedTemplate = require("../models/archivedTemplate");
 const ApprovedTemplate = require("../models/approvedTemplate");
 const auth = require("../utils/auth");
 const ExceptionHandler = require("../core/ExceptionHandler");
 const BadRequestException = require("../exceptions/BadRequestException");
 const ResourceNotFoundException = require("../exceptions/ResourceNotFoundException");
+const UnauthorisedException = require("../exceptions/UnauthorisedException");
 
+router.post("/submit", auth.authenticate, async (req, res) => {
+  try {
+    const { id } = req.body;
+    let template = await Template.findOne({ id });
+    if (!template)
+      throw new ResourceNotFoundException({ resouceName: "Template" });
+    if (!template.user._id.equals(req.user._id))
+      throw new UnauthorisedException({ message: "Unauthorised User" });
+    template.status = "Pending";
+    await template.save();
+    res.json(template);
+  } catch (err) {
+    const e = ExceptionHandler(err);
+    res.status(e.code).json(e);
+  }
+});
+
+router.post(
+  "/approve",
+  auth.authenticate,
+  //   auth.verifyAdmin,
+  async (req, res) => {
+    try {
+      const { id } = req.body;
+      let template = await Template.findOne({ id });
+      if (!template)
+        throw new ResourceNotFoundException({ resouceName: "Template" });
+      const { name, owner, creationTime, lastUpdated, data } = template;
+      let approvedTemplate = new ApprovedTemplate({
+        name,
+        owner,
+        creationTime,
+        lastUpdated,
+        data,
+        id,
+        approvedBy: req.user._id,
+      });
+      const prevTemplate = await ApprovedTemplate.findOne({ id });
+      if (prevTemplate) {
+        const {
+          name,
+          owner,
+          creationTime,
+          lastUpdated,
+          data,
+          version,
+          approvedBy,
+        } = prevTemplate;
+        const archivedTemplate = new ArchivedTemplate({
+          name,
+          owner,
+          creationTime,
+          lastUpdated,
+          data,
+          id,
+          approvedBy,
+          version,
+        });
+        await archivedTemplate.save();
+        await ApprovedTemplate.findOneAndDelete({ id });
+        approvedTemplate.version = version + 1;
+      } else {
+        approvedTemplate.version = 1;
+      }
+      await approvedTemplate.save();
+      await Template.findOneAndDelete({ id });
+      res.json(approvedTemplate);
+    } catch (err) {
+      const e = ExceptionHandler(err);
+      res.status(e.code).json(e);
+    }
+  }
+);
+router.post(
+  "/reject",
+  auth.authenticate,
+  //auth.verifyAdmin,
+  async (req, res) => {
+    try {
+      const { id } = req.body;
+      let template = await Template.findOne({ id });
+      if (!template)
+        throw new ResourceNotFoundException({ resouceName: "Template" });
+      template.status = "Rejected";
+      await template.save();
+      res.json(template);
+    } catch (err) {
+      const e = ExceptionHandler(err);
+      res.status(e.code).json(e);
+    }
+  }
+);
 router.get("/:name/:id", auth.authenticate, async (req, res) => {
   try {
     const { name, id } = req.params;
     if (!id) throw new BadRequestException({ message: "Id is missing" });
     let template;
-    if (name === "draft") template = await DraftTemplate.findOne({ id });
-    if (name === "pending") template = await PendingTemplate.findOne({ id });
+    if (name === "draft") template = await Template.findOne({ id });
+    if (name === "archived") template = await ArchivedTemplate.findOne({ id });
     if (name === "approved") template = await ApprovedTemplate.findOne({ id });
     if (!template)
       throw new ResourceNotFoundException({ resouceName: "Template" });
@@ -30,9 +123,9 @@ router.get("/:name", auth.authenticate, async (req, res) => {
     const { name } = req.params;
     let templates;
     if (name === "draft")
-      templates = await DraftTemplate.find({ owner: req.user._id });
-    if (name === "pending")
-      templates = await PendingTemplate.find({ owner: req.user._id });
+      templates = await Template.find({ owner: req.user._id });
+    if (name === "archived")
+      templates = await ArchivedTemplate.find({ owner: req.user._id });
     if (name === "approved")
       templates = await ApprovedTemplate.find({ owner: req.user._id });
     res.json(templates);
