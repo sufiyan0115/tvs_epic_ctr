@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { HiMenuAlt4, HiOutlineX } from "react-icons/hi";
 import MobileNav from "./MobileNav";
+import { Link } from "react-router-dom";
 import Nav from "./Nav";
 
 const Header = () => {
@@ -33,7 +34,7 @@ const Header = () => {
           data-aos="fade-down"
           data-aos-delay="3000"
         >
-         Logout
+          Logout
         </button>
         <button className="lg:hidden" onClick={() => setMobileNav(!mobileNav)}>
           {mobileNav ? (

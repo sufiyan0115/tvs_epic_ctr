@@ -12,6 +12,7 @@ router.post("/register", async (req, res) => {
       throw new ValidationException({ message: "Password is missing" });
     const hash = await auth.generateHash(password);
     req.body.password = hash;
+    req.body.isAdmin = false;
     const newUser = new User(req.body);
     await newUser.save();
     res.json(newUser);
@@ -47,4 +48,18 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.get("/user", auth.authenticate, async (req, res) => {
+  try {
+    const id = req.user._id;
+    const user = await User.findById(id);
+    if (user) {
+      res.json(user);
+    } else {
+      throw UnauthorisedException({ message: "User Not Found" });
+    }
+  } catch (err) {
+    const e = ExceptionHandler(err);
+    res.status(e.code).json(e);
+  }
+});
 module.exports = router;

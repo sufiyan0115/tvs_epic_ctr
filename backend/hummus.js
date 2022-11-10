@@ -6,7 +6,7 @@ const encryptPdf = (input, output) => {
     pdfDoc
       .encrypt({
         userPassword: "123",
-        ownerPassword: "1234",
+        ownerPassword: process.env.OWNER_PASSWORD || "tvs1234",
         userProtectionFlag: 4,
       })
       .endPDF();
