@@ -4,7 +4,7 @@ const fs = require("fs");
 const cors = require("cors");
 const path = require("path");
 const ejs = require("ejs");
-const Template = require("./models/template");
+const DraftTemplate = require("./models/draftTemplate");
 const ExceptionHandler = require("./core/ExceptionHandler");
 const ValidationException = require("./exceptions/ValidationException");
 const ResourceNotFoundException = require("./exceptions/ResourceNotFoundException");
@@ -24,7 +24,7 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    console.log("We are Connected to Database");
+    console.log("Database Connected");
   })
   .catch((err) => {
     console.log("Database Error!!");
@@ -44,14 +44,19 @@ const io = require("socket.io")(server, {
 
 io.on("connection", (socket) => {
   console.log("Connected");
-  socket.on("get-document", async (id) => {
+  socket.on("get-document", async (data) => {
     try {
-      const template = await findOrCreateTemplate(id);
+      const { id, user } = data;
+      const template = await findOrCreateTemplate(id, user);
+      console.log("check user", user);
       socket.join(id);
-      console.log(template.data);
+      // console.log(template.data);
       socket.emit("load-document", template.data);
       socket.on("save-document", async (data) => {
-        await Template.findOneAndUpdate({ id }, { data });
+        await DraftTemplate.findOneAndUpdate(
+          { id },
+          { data, lastUpdated: Date.now() }
+        );
       });
     } catch (err) {
       const e = ExceptionHandler(err);
@@ -90,11 +95,11 @@ app.get("/pdf", async (req, res) => {
     res.status(e.code).json(e);
   }
 });
-app.get("/getData", async (req, res) => {
+app.get("/getData/:id", async (req, res) => {
   try {
-    const { id } = req.body;
+    const { id } = req.params;
     if (!id) throw new BadRequestException({ message: "Id is missing" });
-    const template = await Template.findOne({ id });
+    const template = await DraftTemplate.findOne({ id });
     if (!template)
       throw new ResourceNotFoundException({ resouceName: "Template" });
     res.json(template);
