@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { header } from "../../data";
 import { HiMenuAlt4, HiOutlineX } from "react-icons/hi";
 import MobileNav from "./MobileNav";
 import Nav from "./Nav";
@@ -20,7 +19,7 @@ const Header = () => {
     >
       <div className="container mx-auto flex justify-between items-center">
         <a href="#" data-aos="fade-down" data-aos-delay="1000">
-          <img width="168" height="60" src="/img/logo.png" alt="" />
+          <img width="168" height="60" src="/img/header/logo.png" alt="" />
         </a>
         <div
           className="hidden lg:flex"
@@ -32,7 +31,7 @@ const Header = () => {
         <button
           className="btn btn-sm btn-outline hidden lg:flex"
           data-aos="fade-down"
-          data-aos-delay="1400"
+          data-aos-delay="3000"
         >
          Logout
         </button>
