@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 const TinyEditor = (props: any) => {
   const [content, _setContent] = useState("");
@@ -16,6 +17,7 @@ const TinyEditor = (props: any) => {
   const { id: documentId } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [templateName, setTemplateName] = useState("");
+  const { user } = useAuth();
 
   useEffect(() => {
     const s = io("http://localhost:3000");
@@ -25,7 +27,7 @@ const TinyEditor = (props: any) => {
     };
   }, []);
   useEffect(() => {
-    if (socket == null) return;
+    if (socket == null || user == null) return;
 
     socket.once("load-document", (document: string) => {
       console.log(isLoading);
@@ -33,8 +35,8 @@ const TinyEditor = (props: any) => {
       setContent(document);
     });
 
-    socket.emit("get-document", documentId);
-  }, [socket, documentId]);
+    socket.emit("get-document", { id: documentId, user });
+  }, [socket, documentId, user]);
 
   useEffect(() => {
     if (socket == null) return;

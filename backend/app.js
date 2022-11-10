@@ -1,18 +1,16 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const fs = require("fs");
 const cors = require("cors");
 const path = require("path");
-const ejs = require("ejs");
-const Template = require("./models/template");
+const DraftTemplate = require("./models/draftTemplate");
 const ExceptionHandler = require("./core/ExceptionHandler");
 const ValidationException = require("./exceptions/ValidationException");
 const ResourceNotFoundException = require("./exceptions/ResourceNotFoundException");
 const BadRequestException = require("./exceptions/BadRequestException");
 const findOrCreateTemplate = require("./utils/findOrCreateTemplate");
-const encryptPdf = require("./hummus");
-const { generatePdf } = require("./utils/pdfGenerator");
 const user = require("./routes/user");
+const pdfGenerate = require("./routes/pdfGenerate");
+const template = require("./routes/template");
 const app = express();
 const PORT = process.env.PORT || 3000;
 const server = require("http").createServer(app);
@@ -24,7 +22,7 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    console.log("We are Connected to Database");
+    console.log("Database Connected");
   })
   .catch((err) => {
     console.log("Database Error!!");
@@ -44,14 +42,17 @@ const io = require("socket.io")(server, {
 
 io.on("connection", (socket) => {
   console.log("Connected");
-  socket.on("get-document", async (id) => {
+  socket.on("get-document", async (data) => {
     try {
-      const template = await findOrCreateTemplate(id);
+      const { id, user } = data;
+      const template = await findOrCreateTemplate(id, user);
       socket.join(id);
-      console.log(template.data);
       socket.emit("load-document", template.data);
       socket.on("save-document", async (data) => {
-        await Template.findOneAndUpdate({ id }, { data });
+        await DraftTemplate.findOneAndUpdate(
+          { id },
+          { data, lastUpdated: Date.now() }
+        );
       });
     } catch (err) {
       const e = ExceptionHandler(err);
@@ -62,47 +63,9 @@ io.on("connection", (socket) => {
 });
 
 app.use("/", user);
-app.get("/pdf", async (req, res) => {
-  try {
-    const html = await ejs.renderFile(
-      path.join(__dirname, "views", "test.ejs")
-    );
-    const pdf = await generatePdf(html);
-    fs.writeFileSync(
-      path.join(__dirname, "test", "normal", "normal_data.pdf"),
-      pdf
-    );
-    const inputFile = path.join(__dirname, "test", "normal", "normal_data.pdf");
-    const outputFile = path.join(
-      __dirname,
-      "test",
-      "encrypted",
-      "encrypted_data.pdf"
-    );
-    const result = encryptPdf(inputFile, outputFile);
-    res.set({
-      "Content-Type": "application/pdf",
-    });
-    res.download(outputFile);
-  } catch (err) {
-    // console.log(err);
-    const e = ExceptionHandler(err);
-    res.status(e.code).json(e);
-  }
-});
-app.get("/getData", async (req, res) => {
-  try {
-    const { id } = req.body;
-    if (!id) throw new BadRequestException({ message: "Id is missing" });
-    const template = await Template.findOne({ id });
-    if (!template)
-      throw new ResourceNotFoundException({ resouceName: "Template" });
-    res.json(template);
-  } catch (err) {
-    const e = ExceptionHandler(err);
-    res.status(e.code).json(e);
-  }
-});
+app.use("/pdf", pdfGenerate);
+app.use("/", template);
+
 server.listen(PORT, () => {
   console.log(`Server Started at ${PORT}`);
 });

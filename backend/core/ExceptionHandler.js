@@ -10,7 +10,6 @@ function ExceptionHandler(E) {
   }
   if (E instanceof BaseException) return E;
   else if (E instanceof Error) {
-    console.log("///////");
     return new BaseException({
       name: E.name,
       message: E.message,

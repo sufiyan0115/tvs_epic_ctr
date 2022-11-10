@@ -7,8 +7,9 @@ const schema = new Schema(
       type: String,
       required: true,
     },
-    author: {
-      type: String,
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     creationTime: {
@@ -19,12 +20,10 @@ const schema = new Schema(
       type: Date,
       required: true,
     },
-    isApproved: {
-      type: Boolean,
-      required: true,
-    },
     approvedBy: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
     data: {
       type: String,
@@ -38,4 +37,4 @@ const schema = new Schema(
   },
   opts
 );
-module.exports = mongoose.model("Template", schema);
+module.exports = mongoose.model("ApprovedTemplate", schema);
