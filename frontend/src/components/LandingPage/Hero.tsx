@@ -1,10 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { hero } from "../../data";
-import { Link } from "react-router-dom";
-import { HiOutlineArrowSmRight } from "react-icons/hi";
-
 const Hero = () => {
-  const { title, subtitle, btnText, compText, image } = hero;
   return (
     <section className="min-h-[750px] pt-12 pb-0 mt-5 lg:mt-0">
       <div className="container mx-auto min-h-[720px] flex justify-center items-center">
@@ -15,18 +9,18 @@ const Hero = () => {
               data-aos="fade-down"
               data-aos-delay="500"
             >
-              {title}
+              Communication Template Repository
             </h1>
             <p
               className="lead mb-5 lg:mb-10"
               data-aos="fade-down"
               data-aos-delay="600"
             >
-              {subtitle}
-            </p>  
+              An online repository of customer document templates
+            </p>
           </div>
           <div className="flex-1" data-aos="fade-up" data-aos-delay="800">
-            <img src={image} alt="" />
+            <img src="/img/hero/hero.jpg" alt="" />
           </div>
         </div>
       </div>

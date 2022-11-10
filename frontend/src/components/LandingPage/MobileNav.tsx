@@ -1,5 +1,11 @@
 import React from 'react';
-import { nav } from '../../data';
+
+export const nav = [
+  {name: 'New Template', href: '/template/draft'},
+  { name: 'Drafts', href: '/' },
+  { name: 'Pending', href: '/' },
+  { name: 'Approved', href: '/' },
+];
 
 const MobileNav = () => {
   return (
