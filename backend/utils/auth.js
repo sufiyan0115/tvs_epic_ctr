@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const BaseException = require("../core/BaseException");
+const BadRequestException = require("../exceptions/BadRequestException");
 const ExceptionHandler = require("../core/ExceptionHandler");
 const UnauthorisedException = require("../exceptions/UnauthorisedException");
 

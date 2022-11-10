@@ -5,8 +5,8 @@ const findOrCreateTemplate = async (id, user) => {
   try {
     if (id == null) return;
     const document = await DraftTemplate.findOne({ id });
-    // if (document && !document.owner.equals(user._id))
-    //   throw new UnauthorisedException({ message: "You don't own this one" });
+    if (document && !document.owner.equals(user._id))
+      throw new UnauthorisedException({ message: "You don't own this one" });
     if (document) return document;
     const curTime = Date.now();
     const newTemplate = {
@@ -17,8 +17,6 @@ const findOrCreateTemplate = async (id, user) => {
       lastUpdated: curTime,
       owner: user._id,
     };
-    // const temp = new DraftTemplate(newTemplate);
-    // return await temp.save();
     return await DraftTemplate.create(newTemplate);
   } catch (err) {
     throw new ValidationException({ message: err.message });
