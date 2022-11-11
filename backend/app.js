@@ -50,6 +50,7 @@ io.on("connection", (socket) => {
       socket.emit("load-document", {
         name: template.name,
         data: template.data,
+        status: template.status,
       });
       socket.on("save-document", async (res) => {
         const { name, data } = res;
