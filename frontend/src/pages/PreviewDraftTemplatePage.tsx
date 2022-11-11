@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../hooks/useAuth";
 import { API_URL } from "../config/constants";
+import ErrorPage from "./ErrorPage";
 import "./PreviewTemplatePage.css";
 
 const draftToPreview = () => {
@@ -45,7 +46,9 @@ const PreviewDraftTemplatePage = (props: any) => {
   const { user } = useAuth();
   const [name, setName] = useState();
   const navigate = useNavigate();
-  
+  const [errorMessage, setErrorMessage] = useState();
+  const [errorOccured, setErrorOccured] = useState(false);
+
   const fetchPreview = async () => {
     try {
       const response = await axios.get(
@@ -59,14 +62,19 @@ const PreviewDraftTemplatePage = (props: any) => {
       const data = response.data;
       setContent(data.data);
       setName(data.name);
-    } catch (err) {
-      console.warn(err);
+    } catch (err: any) {
+      const  msg = err?.response?.data?.message.message || "Something went wrong";
+      setErrorOccured(true);
+      setErrorMessage(msg);
     }
   };
+
 
   useEffect(() => {
     fetchPreview();
   }, []);
+
+  console.log("omw to render")
 
   useEffect(() => {
     draftToPreview();
@@ -96,10 +104,10 @@ const PreviewDraftTemplatePage = (props: any) => {
 
   const approvalClickHandler = async () => {
     await sendForApproval();
-    navigate(`/template/pending/view`);
+    navigate(`/template/pending`);
   };
 
-  return (
+  let pageContent =  (
     <div className="px-7 pt-2 flex items-center flex-col bg-[rgb(248,249,250)]  min-h-screen">
       <div className="flex items-center w-[892px] ">
         <span
@@ -131,6 +139,15 @@ const PreviewDraftTemplatePage = (props: any) => {
       </button>
     </div>
   );
+
+  if(errorOccured)
+  {
+    // pageContent = <ErrorPage message={erro rMessage}></ErrorPage>
+    pageContent = <ErrorPage message={errorMessage}></ErrorPage>
+  }
+
+
+  return pageContent;
 };
 
 export default PreviewDraftTemplatePage;
