@@ -81,7 +81,7 @@ function DraftListPage() {
                               key={draft.id}
                               className="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100 cursor-pointer"
                               onClick={() => {
-                                navigate(`/template/draft/${draft.id}`);
+                                navigate(`/template/draft/preview/${draft.id}`);
                               }}
                             >
                               <td className="px-6 py-4 text-sm font-medium whitespace-nowrap text-gray-900">

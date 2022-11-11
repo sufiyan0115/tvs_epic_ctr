@@ -36,20 +36,24 @@ const App = () => {
             }
           ></Route>
           <Route
-            path="/template/draft/view"
+            path="/template/draft/preview"
             element={user ? <DraftListPage></DraftListPage> : <SignInLayout />}
+          ></Route>
+          <Route
+            path="/template/draft/preview/:id"
+            element={user ? <PreviewDraftTemplatePage></PreviewDraftTemplatePage> : <SignInLayout />}
           ></Route>
           <Route
             path="/template/draft/:id"
             element={user ? <DraftTemplatePage /> : <SignInLayout />}
           ></Route>
           <Route
-            path="/template/pending/view"
+            path="/template/pending"
             element={user ? <PendingListPage></PendingListPage> : <SignInLayout />}
           ></Route>
           <Route
             path="/template/pending/:id"
-            element={<PreviewPendingTemplatePage />}
+            element={user ? <PreviewPendingTemplatePage /> : <SignInLayout />}
           ></Route>
           <Route path="/input-dialog" element={<InputDialog />}></Route>
 

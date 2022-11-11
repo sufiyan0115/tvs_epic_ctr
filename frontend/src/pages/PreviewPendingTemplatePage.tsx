@@ -63,7 +63,7 @@ const PreviewPendingTemplatePage = (props: any) => {
       setName(data.name);
     } catch (err:any) {
         errorOccured = true;
-        const message = err?.response?.data?.message || "Something went wrong";
+         message = err?.response?.data?.message.message || "Something went wrong";
     }
   };
 
@@ -97,7 +97,7 @@ const PreviewPendingTemplatePage = (props: any) => {
   const approvalClickHandler = async () => {
     if(!user.isAdmin) return;
     await approveTemplate();
-    navigate(`/template/approved/view`);
+    navigate(`/template/approved`);
   };
 
   let pageContent = (
