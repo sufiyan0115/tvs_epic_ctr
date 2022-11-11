@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
-const DraftTemplate = require("./models/draftTemplate");
+const Template = require("./models/template");
 const ExceptionHandler = require("./core/ExceptionHandler");
 const ValidationException = require("./exceptions/ValidationException");
 const ResourceNotFoundException = require("./exceptions/ResourceNotFoundException");
@@ -49,7 +49,7 @@ io.on("connection", (socket) => {
       socket.join(id);
       socket.emit("load-document", template.data);
       socket.on("save-document", async (data) => {
-        await DraftTemplate.findOneAndUpdate(
+        await Template.findOneAndUpdate(
           { id },
           { data, lastUpdated: Date.now() }
         );
@@ -64,7 +64,7 @@ io.on("connection", (socket) => {
 
 app.use("/", user);
 app.use("/pdf", pdfGenerate);
-app.use("/", template);
+app.use("/template", template);
 
 server.listen(PORT, () => {
   console.log(`Server Started at ${PORT}`);

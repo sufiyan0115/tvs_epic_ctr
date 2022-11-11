@@ -34,6 +34,10 @@ const schema = new Schema(
       required: true,
       unique: true,
     },
+    version: {
+      type: Number,
+      required: true,
+    },
   },
   opts
 );

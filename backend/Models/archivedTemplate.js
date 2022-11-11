@@ -20,6 +20,11 @@ const schema = new Schema(
       type: Date,
       required: true,
     },
+    approvedBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     data: {
       type: String,
       required: true,
@@ -27,9 +32,13 @@ const schema = new Schema(
     id: {
       type: String,
       required: true,
-      unique: true,
+      index: true,
+    },
+    version: {
+      type: Number,
+      required: true,
     },
   },
   opts
 );
-module.exports = mongoose.model("DraftTemplate", schema);
+module.exports = mongoose.model("ArchivedTemplate", schema);
