@@ -1,8 +1,7 @@
 import TinyEditor from "../components/TinyEditor";
 const DraftTemplatePage = (props: any) => {
   return (
-    <div>
-      <h1 className="text-xl text-white px-3 py-1 bg-primary">TVS E.P.I.C</h1>
+    <div className="bg-[rgb(248,249,250)]">
       <TinyEditor ></TinyEditor>
     </div>
   );

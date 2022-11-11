@@ -8,6 +8,7 @@
   font-family: Arial, Helvetica, sans-serif;
   font-size: 12pt;
   width: 856px;
+  min-height: 1263px;
   margin: 16px;
 }
 .mce-content-body p {
@@ -155,9 +156,9 @@
 }
 
 .mce-content-body .tiny-pageembed--21by9 iframe,
-.tiny-pageembed--16by9 iframe,
-.tiny-pageembed--4by3 iframe,
-.tiny-pageembed--1by1 iframe {
+.mce-content-body .tiny-pageembed--16by9 iframe,
+.mce-content-body .tiny-pageembed--4by3 iframe,
+.mce-content-body .tiny-pageembed--1by1 iframe {
   border: 0;
   height: 100%;
   left: 0;
@@ -246,13 +247,13 @@
 }
 /* Apply a default padding if legacy cellpadding attribute is missing */
 .mce-content-body table:not([cellpadding]) th,
-table:not([cellpadding]) td {
+.mce-content-body table:not([cellpadding]) td {
   padding: 0.4rem;
 }
 /* Set default table styles if a table has a positive border attribute
   and no inline css */
   .mce-content-body table[border]:not([border="0"]):not([style*="border-width"]) th,
-table[border]:not([border="0"]):not([style*="border-width"]) td {
+  .mce-content-body table[border]:not([border="0"]):not([style*="border-width"]) td {
   border-width: 1px;
 }
 /* Set default table styles if a table has a positive border attribute
@@ -264,7 +265,7 @@ table[border]:not([border="0"]):not([style*="border-style"]) td {
 /* Set default table styles if a table has a positive border attribute
   and no inline css */
   .mce-content-body table[border]:not([border="0"]):not([style*="border-color"]) th,
-table[border]:not([border="0"]):not([style*="border-color"]) td {
+  .mce-content-body table[border]:not([border="0"]):not([style*="border-color"]) td {
   border-color: black;
 }
 .mce-content-body figure {

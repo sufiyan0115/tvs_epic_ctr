@@ -1,10 +1,13 @@
 import React from "react";
 import LandingPage from "./pages/LandingPage";
 import DraftTemplatePage from "./pages/DraftTemplatePage";
-import PreviewTemplatePage from "./pages/PreviewTemplatePage";
+import PreviewDraftTemplatePage from "./pages/PreviewDraftTemplatePage";
+import PreviewPendingTemplatePage from "./pages/PreviewPendingTemplatePage";
 import InputDialog from "./components/InputDialog";
 import SignInLayout from "./components/SignIn/SignInLayout";
 import SignUpLayout from "./components/SignUp/SignUpLayout";
+import DraftListPage from "./pages/DraftListPage";
+import PendingListPage from "./pages/PendingListPage";
 import { Route, Routes, Navigate } from "react-router-dom";
 import { v4 as uuidV4 } from "uuid";
 import { useAuth } from "./hooks/useAuth";
@@ -33,12 +36,20 @@ const App = () => {
             }
           ></Route>
           <Route
+            path="/template/draft/view"
+            element={user ? <DraftListPage></DraftListPage> : <SignInLayout />}
+          ></Route>
+          <Route
             path="/template/draft/:id"
             element={user ? <DraftTemplatePage /> : <SignInLayout />}
           ></Route>
           <Route
-            path="/template/preview/:id"
-            element={<PreviewTemplatePage />}
+            path="/template/pending/view"
+            element={user ? <PendingListPage></PendingListPage> : <SignInLayout />}
+          ></Route>
+          <Route
+            path="/template/pending/:id"
+            element={<PreviewPendingTemplatePage />}
           ></Route>
           <Route path="/input-dialog" element={<InputDialog />}></Route>
 
