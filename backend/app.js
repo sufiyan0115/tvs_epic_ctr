@@ -47,11 +47,15 @@ io.on("connection", (socket) => {
       const { id, user } = data;
       const template = await findOrCreateTemplate(id, user);
       socket.join(id);
-      socket.emit("load-document", template.data);
-      socket.on("save-document", async (data) => {
+      socket.emit("load-document", {
+        name: template.name,
+        data: template.data,
+      });
+      socket.on("save-document", async (res) => {
+        const { name, data } = res;
         await Template.findOneAndUpdate(
           { id },
-          { data, lastUpdated: Date.now() }
+          { name, data, lastUpdated: Date.now() }
         );
       });
     } catch (err) {
