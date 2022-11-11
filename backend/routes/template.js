@@ -129,16 +129,26 @@ router.get("/:name/:id", auth.authenticate, async (req, res) => {
 router.get("/:name", auth.authenticate, async (req, res) => {
   try {
     const { name } = req.params;
+    const page = req.query.page || 1;
+    const limit = req.query.limit || 10;
+    let skip = (page - 1) * limit;
+    if (skip < 0) skip = 0;
     let templates = [];
     if (name === "draft" || name === "pending" || name === "rejected")
       templates = await Template.find({
         owner: req.user._id,
         status: name.charAt(0).toUpperCase() + name.slice(1),
-      });
+      })
+        .limit(limit)
+        .skip(skip);
     if (name === "archived")
-      templates = await ArchivedTemplate.find({ owner: req.user._id });
+      templates = await ArchivedTemplate.find({ owner: req.user._id })
+        .limit(limit)
+        .skip(skip);
     if (name === "approved")
-      templates = await ApprovedTemplate.find({ owner: req.user._id });
+      templates = await ApprovedTemplate.find({ owner: req.user._id })
+        .limit(limit)
+        .skip(skip);
     res.json(templates);
   } catch (err) {
     const e = ExceptionHandler(err);
