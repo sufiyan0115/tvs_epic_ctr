@@ -1,5 +1,6 @@
 import Copyright from "./Copyright";
 import { HiMail } from "react-icons/hi";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -13,12 +14,12 @@ const Footer = () => {
             <div className="text-2xl uppercase font-medium mb-6">Links</div>
             <ul className="flex flex-col gap-y-3">
               <li key="home">
-                <a
+                <Link
                   className="font-medium hover:text-accent transition"
-                  href="/"
+                  to={"/"}
                 >
                   Home
-                </a>
+                </Link>
               </li>
               <li key="aboutUs">
                 <a

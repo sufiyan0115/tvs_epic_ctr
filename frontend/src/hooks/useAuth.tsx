@@ -11,6 +11,7 @@ const AuthContext = createContext({
   user: {},
   setUser: (a: any) => {},
   login: (values: {}) => {},
+  register: (values: {}) => {},
   logout: () => {},
   loading: false,
   tokenChecking: true,
@@ -55,7 +56,27 @@ export const AuthProvider = (props: any) => {
     }
   };
 
-  const login = (values: {}) => {
+  const register = (values: any) => {
+    setLoading(true);
+    axios
+      .post(`${API_URL}register`, values)
+      .then((res) => {
+        login({ email: values.email, password: values.password });
+      })
+      .catch((err) => {
+        console.log(err);
+        const message = err?.response?.data?.message || "Something went wrong";
+        toast.error(message, {
+          position: "top-right",
+          autoClose: 1000,
+          closeOnClick: true,
+          progress: undefined,
+        });
+        setLoading(false);
+      });
+  };
+
+  const login = (values: any) => {
     setLoading(true);
     axios
       .post(`${API_URL}login`, values)
@@ -63,7 +84,6 @@ export const AuthProvider = (props: any) => {
         setAuth(true);
         const user_data = res.data.user;
         user_data.token = res.data.token;
-        console.log(user_data);
         localStorage.setItem("token_tvs", user_data.token);
         setToken(res.data.token);
         setUser(user_data);
@@ -86,6 +106,7 @@ export const AuthProvider = (props: any) => {
     setAuth(false);
     setToken(null);
     setUser(null);
+    localStorage.removeItem("token_tvs");
     navigate("/");
   };
 
@@ -98,6 +119,7 @@ export const AuthProvider = (props: any) => {
         setUser,
         login,
         logout,
+        register,
         loading,
         tokenChecking,
       }}

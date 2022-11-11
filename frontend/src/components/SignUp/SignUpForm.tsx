@@ -1,6 +1,5 @@
 import useInput from "../../hooks/useInput";
 import { useAuth } from "../../hooks/useAuth";
-import "./SignInForm.css";
 import { Link } from "react-router-dom";
 
 const isGoodPassword = (value: any) => {
@@ -11,7 +10,19 @@ const isEmail = (value: string) => {
   return value.match(validRegex);
 }
 
-const BasicForm = (props: any) => {
+const isValidName = (value: string)=>{
+    return  value.trim() !== '';
+}
+
+const SignUpForm = (props: any) => {
+    const {
+        value: nameValue,
+        isValid: nameIsValid,
+        hasError: nameHasError,
+        valueChangeHandler: nameChangeHandler,
+        inputBlurHandler: nameBlurHandler,
+        reset: resetName,
+      } = useInput(isValidName);
   const {
     value: emailValue,
     isValid: emailIsValid,
@@ -28,11 +39,12 @@ const BasicForm = (props: any) => {
     inputBlurHandler: passwordBlurHandler,
     reset: resetPassword,
   } = useInput(isGoodPassword);
-  const { login } = useAuth();
+
+  const { register } = useAuth();
 
   let formIsValid = false;
 
-  if (emailIsValid && passwordIsValid) {
+  if (emailIsValid && passwordIsValid && nameIsValid) {
     formIsValid = true;
   }
 
@@ -42,16 +54,18 @@ const BasicForm = (props: any) => {
       return;
     }
     const values = {
+      name: nameValue,
       password: passwordValue,
       email: emailValue,
     };
-    login(values);
-
+    register(values);
+    resetName();
     resetEmail();
     resetPassword();
   };
 
   const emailClasses = emailHasError ? "form-control invalid" : "form-control";
+  const nameClasses = nameHasError ? "form-control invalid" : "form-control";
   const passwordClasses = passwordHasError
     ? "form-control invalid"
     : "form-control";
@@ -66,16 +80,35 @@ const BasicForm = (props: any) => {
       </div>
 
       <div className="text-4xl font-bold mb-8 ">
-        <span>Login</span>
+        <span>Sign Up</span>
       </div>
 
-      <div className={`${emailClasses} `}>
+      <div className={`${nameClasses} `}>
         <label className="font-bold text-base " htmlFor="name">
-          E-Mail Address
+            Full Name
         </label>
         <input
           type="text"
           id="name"
+          className="w-full"
+          value={nameValue}
+          onChange={nameChangeHandler}
+          onBlur={nameBlurHandler}
+        />
+        {nameHasError && (
+          <p className="error-text text-xs">
+           Name cannot be empty.
+          </p>
+        )}
+      </div>
+
+      <div className={`${emailClasses} `}>
+        <label className="font-bold text-base " htmlFor="email">
+          E-Mail Address
+        </label>
+        <input
+          type="text"
+          id="email"
           className="w-full"
           value={emailValue}
           onChange={emailChangeHandler}
@@ -114,51 +147,11 @@ const BasicForm = (props: any) => {
         </button>
       </div>
        <div className="flex justify-center text-sm mt-8 ">
-        <span>Don't have an account? <Link className="text-blue-500" to={"/signup"}>Signup</Link></span>
+        <span>Already have an account? <Link className="text-blue-500" to={"/signin"}>Login</Link></span>
        </div>
     </form>
   );
 };
 
-export default BasicForm;
+export default SignUpForm;
 
-{
-  /* 
-      <div className='control-group'>
-<div className={firstNameClasses}>
-          <label htmlFor='name'>First Name</label>
-          <input
-            type='text'
-            id='name'
-            value={firstNameValue}
-            onChange={firstNameChangeHandler}
-            onBlur={firstNameBlurHandler}
-          />
-          {firstNameHasError && <p className="error-text">Please enter a first name.</p>}
-        </div>
-        <div className={lastNameClasses}>
-          <label htmlFor='name'>Last Name</label>
-          <input
-            type='text'
-            id='name'
-            value={lastNameValue}
-            onChange={lastNameChangeHandler}
-            onBlur={lastNameBlurHandler}
-          />
-          {lastNameHasError && <p className="error-text">Please enter a last name.</p>}
-        </div>
-      </div>
-      <div className={emailClasses}>
-        <label htmlFor='name'>E-Mail Address</label>
-        <input
-          type='text'
-          id='name'
-          value={emailValue}
-          onChange={emailChangeHandler}
-          onBlur={emailBlurHandler}
-        />
-        {emailHasError && <p className="error-text">Please enter a valid email address.</p>}
-      </div>
-
-    */
-}

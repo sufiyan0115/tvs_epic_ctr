@@ -1,11 +1,11 @@
-import SignInForm from "./SignInForm";
+import SignUpForm from "./SignUpForm";
 
-const SignInLayout = () => {
+const SignUpLayout = () => {
   return (
     <div className=" h-screen w-full flex items-center justify-center">
       <div className="w-2/5 flex ">
         <div className="w-1/3"></div>
-        <SignInForm className="w-2/3"></SignInForm>
+        <SignUpForm className="w-2/3"></SignUpForm>
       </div>
       <div className="w-3/5 flex justify-start">
           <img
@@ -18,4 +18,4 @@ const SignInLayout = () => {
   );
 };
 
-export default SignInLayout;
+export default SignUpLayout;

@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Link } from 'react-router-dom';
 export const nav = [
   {name: 'New Template', href: '/template/draft'},
   { name: 'Drafts', href: '/' },
@@ -15,9 +15,9 @@ const MobileNav = () => {
           const { href, name } = item;
           return (
             <li key={index}>
-              <a className='link text-white text-xl' href={href}>
+              <Link className='link text-white text-xl' to={href}>
                 {name}
-              </a>
+              </Link>
             </li>
           );
         })}
