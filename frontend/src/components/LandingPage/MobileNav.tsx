@@ -1,5 +1,11 @@
 import React from 'react';
-import { nav } from '../../data';
+import { Link } from 'react-router-dom';
+export const nav = [
+  {name: 'New Template', href: '/template/draft'},
+  { name: 'Drafts', href: '/' },
+  { name: 'Pending', href: '/' },
+  { name: 'Approved', href: '/' },
+];
 
 const MobileNav = () => {
   return (
@@ -9,9 +15,9 @@ const MobileNav = () => {
           const { href, name } = item;
           return (
             <li key={index}>
-              <a className='link text-white text-xl' href={href}>
+              <Link className='link text-white text-xl' to={href}>
                 {name}
-              </a>
+              </Link>
             </li>
           );
         })}

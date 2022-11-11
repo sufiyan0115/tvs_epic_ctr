@@ -42,7 +42,7 @@ const PreviewTemplatePage = (props: any) => {
   const { id: documentId } = useParams();
 
   useEffect(() => {
-    fetch(`http://localhost:3000/getData/${documentId}`)
+    fetch(`http://localhost:3000/template/draft/${documentId}`)
       .then((res) => res.json())
       .then((data) => {
         let editorData = data.data;

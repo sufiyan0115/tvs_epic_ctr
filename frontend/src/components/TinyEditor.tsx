@@ -98,8 +98,9 @@ const TinyEditor = (props: any) => {
           },
           plugins: " export image editimage lists checklist preview table",
           external_plugins: {
-            inputField: "/tinymce/inputField.js",
+            inputField: "/tinymce/inputField.js"
           },
+          language_url: '/tinymce/hi.js',
           table_style_by_css: true,
 
           table_toolbar:

@@ -1,6 +1,13 @@
 import React from "react";
-import { nav } from "../../data";
+
 import { Link } from "react-router-dom";
+export const nav = [
+  { name: "New Template", href: "/template/draft" },
+  { name: "Drafts", href: "/" },
+  { name: "Pending", href: "/" },
+  { name: "Approved", href: "/" },
+];
+
 const Nav = () => {
   return (
     <nav>
@@ -9,7 +16,12 @@ const Nav = () => {
           const { href, name } = item;
           return (
             <li key={index}>
-              <Link to={`${href}`}>{name}</Link>
+              <Link
+                className="font-medium hover:text-accent transition"
+                to={`${href}`}
+              >
+                {name}
+              </Link>
             </li>
           );
         })}
