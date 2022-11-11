@@ -5,6 +5,7 @@ import PreviewTemplatePage from "./pages/PreviewTemplatePage";
 import InputDialog from "./components/InputDialog";
 import SignInLayout from "./components/SignIn/SignInLayout";
 import SignUpLayout from "./components/SignUp/SignUpLayout";
+import DraftListPage from "./pages/DraftListPage";
 import { Route, Routes, Navigate } from "react-router-dom";
 import { v4 as uuidV4 } from "uuid";
 import { useAuth } from "./hooks/useAuth";
@@ -32,6 +33,17 @@ const App = () => {
               )
             }
           ></Route>
+          <Route
+            path="/template/draft/view"
+            element={
+              user ? (
+                <DraftListPage></DraftListPage>
+              ) : (
+                <SignInLayout />
+              )
+            }
+          ></Route>
+
           <Route
             path="/template/draft/:id"
             element={user ? <DraftTemplatePage /> : <SignInLayout />}
