@@ -18,6 +18,7 @@ router.post("/submit", auth.authenticate, async (req, res) => {
     if (!template.owner._id.equals(req.user._id))
       throw new UnauthorisedException({ message: "Unauthorised User" });
     template.status = "Pending";
+    template.time = Date.now();
     await template.save();
     res.json(template);
   } catch (err) {
@@ -45,6 +46,7 @@ router.post(
         data,
         id,
         approvedBy: req.user._id,
+        time: Date.now(),
       });
       const prevTemplate = await ApprovedTemplate.findOne({ id });
       if (prevTemplate) {
@@ -66,6 +68,7 @@ router.post(
           id,
           approvedBy,
           version,
+          time: Date.now(),
         });
         await archivedTemplate.save();
         await ApprovedTemplate.findOneAndDelete({ id });
@@ -93,6 +96,7 @@ router.post(
       if (!template)
         throw new ResourceNotFoundException({ resouceName: "Template" });
       template.status = "Rejected";
+      template.time = Date.now();
       await template.save();
       res.json(template);
     } catch (err) {
