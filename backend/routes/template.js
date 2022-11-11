@@ -146,4 +146,19 @@ router.get("/:name", auth.authenticate, async (req, res) => {
   }
 });
 
+router.delete("/draft/:id", auth.authenticate, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const template = await Template.findOne({ id });
+    if (!template)
+      throw new ResourceNotFoundException({ resouceName: "Template" });
+    if (!template.owner._id.equals(req.user._id))
+      throw new UnauthorisedException({ message: "Unauthorised User" });
+    await Template.findOneAndDelete({ id });
+    res.send("Deleted");
+  } catch (err) {
+    const e = ExceptionHandler(err);
+    res.status(e.code).json(e);
+  }
+});
 module.exports = router;
