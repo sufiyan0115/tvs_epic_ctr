@@ -2,9 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 export const nav = [
   {name: 'New Template', href: '/template/draft'},
-  { name: 'Drafts', href: '/' },
+  { name: 'Drafts', href: '/template/draft/view' },
   { name: 'Pending', href: '/' },
   { name: 'Approved', href: '/' },
+  {name: 'Rejected',href:'/'}
 ];
 
 const MobileNav = () => {

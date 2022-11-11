@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const fs = require("fs");
-const DraftTemplate = require("../models/draftTemplate");
 const path = require("path");
 const ejs = require("ejs");
 const auth = require("../utils/auth");

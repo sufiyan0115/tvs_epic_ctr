@@ -4,12 +4,17 @@ const User = require("../models/user");
 const auth = require("../utils/auth");
 const ExceptionHandler = require("../core/ExceptionHandler");
 const ValidationException = require("../exceptions/ValidationException");
+const BadRequestException = require("../exceptions/BadRequestException");
 
 router.post("/register", async (req, res) => {
   try {
-    const { password } = req.body;
+    const { email, password } = req.body;
     if (!password)
       throw new ValidationException({ message: "Password is missing" });
+    const user = await User.findOne({ email });
+    if (user) {
+      throw new BadRequestException({ message: "Email already in use" });
+    }
     const hash = await auth.generateHash(password);
     req.body.password = hash;
     req.body.isAdmin = false;
