@@ -3,8 +3,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 export const nav = [
   { name: "New Template", href: "/template/draft" },
-  { name: "Drafts", href: "/template/draft/view" },
-  { name: "Pending", href: "/" },
+  { name: "Drafts", href: "/template/draft/preview" },
+  { name: "Pending", href: "/template/pending" },
   { name: "Approved", href: "/" },
   {name: 'Rejected',href:'/'}
 

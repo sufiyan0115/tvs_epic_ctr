@@ -67,7 +67,7 @@ const TinyEditor = (props: any) => {
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
-    navigate(`/template/preview/${documentId}`)
+    navigate(`/template/draft/preview/${documentId}`)
   };
 
   const templateNameChangeHandler = (event: any) => {
@@ -78,7 +78,6 @@ const TinyEditor = (props: any) => {
   return (
     <div
       className="px-7 pt-2 flex items-center flex-col "
-      onSubmit={handleSubmit}
     >
       <div className="flex w-[892px] ">
         <input

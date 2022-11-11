@@ -1,8 +1,7 @@
 const ErrorPage = (props:any)=>{
-
 return (
     <div>
-        {props.message}
+            {props.message}
     </div>
 )
 
