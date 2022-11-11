@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Link } from "react-router-dom";
 const copyright = {
   social: [
     { icon: "/img/copyright/facebook.svg", href: "https://www.facebook.com/TVSCREDIT/" },
@@ -18,9 +18,9 @@ const Copyright = () => {
       data-aos-delay="200"
     >
       <div className="flex gap-x-6">
-        <a className="hover:text-accent transition" href="/">
+        <Link className="hover:text-accent transition" to={"/"}>
           Privacy & Terms
-        </a>
+        </Link>
       </div>
       <div>Copyright @ 2022 TVS</div>
       <ul className="flex gap-x-[12px]">

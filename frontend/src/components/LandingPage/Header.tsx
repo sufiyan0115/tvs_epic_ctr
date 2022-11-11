@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { HiMenuAlt4, HiOutlineX } from "react-icons/hi";
 import MobileNav from "./MobileNav";
-import { Link } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 import Nav from "./Nav";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [mobileNav, setMobileNav] = useState(false);
@@ -12,6 +14,17 @@ const Header = () => {
       window.scrollY > 60 ? setIsActive(true) : setIsActive(false);
     });
   });
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const logoutButtonClickHandler = () => {
+    if (user) {
+      console.log(user);
+      logout();
+    } else {
+      navigate("/signin");
+    }
+  };
+
   return (
     <header
       className={`${
@@ -19,9 +32,9 @@ const Header = () => {
       } py-6 lg:py-4 fixed w-full transition-all z-10`}
     >
       <div className="container mx-auto flex justify-between items-center">
-        <a href="#" data-aos="fade-down" data-aos-delay="1000">
+        <div data-aos="fade-down" data-aos-delay="1000">
           <img width="168" height="60" src="/img/header/logo.png" alt="" />
-        </a>
+        </div>
         <div
           className="hidden lg:flex"
           data-aos="fade-down"
@@ -32,9 +45,10 @@ const Header = () => {
         <button
           className="btn btn-sm btn-outline hidden lg:flex"
           data-aos="fade-down"
-          data-aos-delay="3000"
+          data-aos-delay="1400"
+          onClick={logoutButtonClickHandler}
         >
-          Logout
+          {user ? "Logout" : "Login"}
         </button>
         <button className="lg:hidden" onClick={() => setMobileNav(!mobileNav)}>
           {mobileNav ? (

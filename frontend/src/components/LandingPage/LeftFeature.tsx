@@ -1,7 +1,7 @@
 import React from "react";
 
 const LeftFeature = (props: any) => {
-  const { pretitle, title, subtitle, btnLink, btnIcon, image } = props.content;
+  const { pretitle, title, subtitle, image } = props.content;
   return (
     <section className="section">
       <div className="container mx-auto">
@@ -21,9 +21,6 @@ const LeftFeature = (props: any) => {
             <div className="pretitle">{pretitle}</div>
             <h2 className="title">{title}</h2>
             <p className="lead">{subtitle}</p>
-            <button className="btn-link flex items-center gap-x-3 hover:gap-x-5 transition-all">
-              {btnLink} <img src={btnIcon} alt="" />
-            </button>
           </div>
         </div>
       </div>
