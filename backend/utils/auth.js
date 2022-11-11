@@ -53,7 +53,6 @@ const authenticate = async function (req, res, next) {
     if (!token || (typeof token === "string" && token.length === 0)) {
       throw new UnauthorisedException({ message: "No token provided" });
     }
-    // console.log("??");
     token = token.replace("Bearer ", "");
     let decoded;
     try {
