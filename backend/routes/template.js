@@ -15,7 +15,7 @@ router.post("/submit", auth.authenticate, async (req, res) => {
     let template = await Template.findOne({ id });
     if (!template)
       throw new ResourceNotFoundException({ resouceName: "Template" });
-    if (!template.user._id.equals(req.user._id))
+    if (!template.owner._id.equals(req.user._id))
       throw new UnauthorisedException({ message: "Unauthorised User" });
     template.status = "Pending";
     await template.save();
@@ -106,9 +106,17 @@ router.get("/:name/:id", auth.authenticate, async (req, res) => {
     const { name, id } = req.params;
     if (!id) throw new BadRequestException({ message: "Id is missing" });
     let template;
-    if (name === "draft") template = await Template.findOne({ id });
     if (name === "archived") template = await ArchivedTemplate.findOne({ id });
-    if (name === "approved") template = await ApprovedTemplate.findOne({ id });
+    else if (name === "approved")
+      template = await ApprovedTemplate.findOne({ id });
+    else if (name === "draft" || name === "pending" || name === "rejected") {
+      template = await Template.findOne({ id });
+      const check = name.charAt(0).toUpperCase() + name.slice(1);
+      if (template.status !== check)
+        throw new ResourceNotFoundException({
+          message: `This template has been moved to ${template.status} `,
+        });
+    }
     if (!template)
       throw new ResourceNotFoundException({ resouceName: "Template" });
     res.json(template);
@@ -121,9 +129,12 @@ router.get("/:name/:id", auth.authenticate, async (req, res) => {
 router.get("/:name", auth.authenticate, async (req, res) => {
   try {
     const { name } = req.params;
-    let templates;
-    if (name === "draft")
-      templates = await Template.find({ owner: req.user._id });
+    let templates = [];
+    if (name === "draft" || name === "pending" || name === "rejected")
+      templates = await Template.find({
+        owner: req.user._id,
+        status: name.charAt(0).toUpperCase() + name.slice(1),
+      });
     if (name === "archived")
       templates = await ArchivedTemplate.find({ owner: req.user._id });
     if (name === "approved")
