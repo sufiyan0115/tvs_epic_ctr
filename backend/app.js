@@ -11,6 +11,7 @@ const template = require("./routes/template");
 const app = express();
 const PORT = process.env.PORT || 3000;
 const server = require("http").createServer(app);
+const API_URL = "/api/";
 const db_URL = process.env.db_URL || "mongodb://localhost:27017/tvs-ctr";
 
 mongoose
@@ -33,7 +34,7 @@ app.set("view engine", "ejs");
 
 const io = require("socket.io")(server, {
   cors: {
-    origin: "http://127.0.0.1:5173",
+    origin: "/",
   },
 });
 
@@ -66,9 +67,12 @@ io.on("connection", (socket) => {
   });
 });
 
-app.use("/", user);
-app.use("/pdf", pdfGenerate);
-app.use("/template", template);
+app.use("/api/", user);
+app.use("/api/pdf", pdfGenerate);
+app.use("/api/template", template);
+app.use("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
 server.listen(PORT, () => {
   console.log(`Server Started at ${PORT}`);

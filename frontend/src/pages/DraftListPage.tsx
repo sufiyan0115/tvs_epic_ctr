@@ -133,7 +133,7 @@ function DraftListPage(props: any) {
             </div>
           </div>
           {type === "draft" && (
-            <button className="btn btn-sm btn-accent hidden lg:flex w-[180px]">
+            <button className="btn btn-sm btn-accent hidden lg:flex">
               <Link to={"/template/draft"}>Add New Template</Link>
             </button>
           )}

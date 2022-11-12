@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { toast } from "react-toastify";
+import { apiKey } from "../config/constants";
 
 const TinyEditor = (props: any) => {
   const [content, _setContent] = useState(" ");
@@ -35,7 +36,7 @@ const TinyEditor = (props: any) => {
 
   useEffect(() => {
     try {
-      const s = io("http://localhost:3000");
+      const s = io("/");
       setSocket(s);
       return () => {
         s.disconnect();
@@ -133,7 +134,7 @@ const TinyEditor = (props: any) => {
 
       <Editor
         ref={editorRef}
-        apiKey="q1l0wbw69iya46bmue4pwj4o4si6utmsxxt5eqc8ppifonkn"
+        apiKey={apiKey}
         disabled={isLoading || !isDraft}
         value={
           isLoading
