@@ -2,17 +2,16 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { navigateUrlGenerator } from "./UrlGenerator";
 
-function TableFooter({ totalPages, page }: any) {
+function TableFooter({ totalPages, page, type, search }: any) {
   const navigate = useNavigate();
-  if(totalPages==0)
-  return (<div></div>)
+  if (totalPages == 0) return <div></div>;
 
   return (
     <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
       <div className="flex flex-1 justify-between sm:hidden">
         <button
           onClick={() => {
-            page > 1 && navigate(navigateUrlGenerator(page - 1));
+            page > 1 && navigate(navigateUrlGenerator(page - 1, type, search));
           }}
           disabled={page <= 1}
           className={`btn-link-table ${page <= 1 && "cursor-not-allowed"}`}
@@ -22,7 +21,8 @@ function TableFooter({ totalPages, page }: any) {
         <button
           disabled={page === totalPages}
           onClick={() => {
-            page < totalPages && navigate(navigateUrlGenerator(page + 1));
+            page < totalPages &&
+              navigate(navigateUrlGenerator(page + 1, type, search));
           }}
           className={`btn-link-table ${
             page === totalPages && "cursor-not-allowed"
@@ -36,7 +36,8 @@ function TableFooter({ totalPages, page }: any) {
           <p className="text-sm text-gray-700">
             Showing&nbsp;
             <span className="font-medium">1</span>&nbsp;of&nbsp;
-            <span className="font-medium">{totalPages ? totalPages : 1}</span>&nbsp;pages
+            <span className="font-medium">{totalPages ? totalPages : 1}</span>
+            &nbsp;pages
           </p>
         </div>
         <div>
@@ -47,7 +48,8 @@ function TableFooter({ totalPages, page }: any) {
             <button
               disabled={page <= 1}
               onClick={() => {
-                page > 1 && navigate(navigateUrlGenerator(page - 1));
+                page > 1 &&
+                  navigate(navigateUrlGenerator(page - 1, type, search));
               }}
               className={`relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20 ${
                 page <= 1 && "cursor-not-allowed"
@@ -111,7 +113,8 @@ function TableFooter({ totalPages, page }: any) {
             <button
               disabled={page === totalPages}
               onClick={() => {
-                page < totalPages && navigate(navigateUrlGenerator(page + 1));
+                page < totalPages &&
+                  navigate(navigateUrlGenerator(page + 1, type, search));
               }}
               className={`relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20 ${
                 page === totalPages && "cursor-not-allowed"

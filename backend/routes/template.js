@@ -120,11 +120,12 @@ router.post(
   //auth.verifyAdmin,
   async (req, res) => {
     try {
-      const { id } = req.body;
+      const { id, feedback } = req.body;
       let template = await Template.findOne({ id });
       if (!template)
         throw new ResourceNotFoundException({ resouceName: "Template" });
       template.status = "Rejected";
+      template.rejectMessage = feedback;
       template.time = Date.now();
       await template.save();
       res.json(template);

@@ -1,29 +1,9 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const baseSchema = require("./baseSchema");
 const opts = { toJSON: { virtuals: true } };
 const schema = new Schema(
   {
-    name: {
-      type: String,
-      required: true,
-    },
-    owner: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    creationTime: {
-      type: Date,
-      required: true,
-    },
-    lastUpdated: {
-      type: Date,
-      required: true,
-    },
-    data: {
-      type: String,
-      required: true,
-    },
     id: {
       type: String,
       required: true,
@@ -33,10 +13,10 @@ const schema = new Schema(
       type: String,
       required: true,
     },
-    time: {
-      type: Date,
-    },
+    rejectMessage: String,
   },
   opts
 );
+schema.add(baseSchema);
+
 module.exports = mongoose.model("Template", schema);

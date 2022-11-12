@@ -47,7 +47,7 @@ function DraftListPage(props: any) {
   const navigate = useNavigate();
   useEffect(() => {
     console.log(searchContent);
-    navigate(navigateUrlGenerator(page, searchContent));
+    navigate(navigateUrlGenerator(page, type, searchContent));
   }, [searchContent]);
 
   useEffect(() => {
@@ -85,31 +85,27 @@ function DraftListPage(props: any) {
         <Navbar></Navbar>
       </div>
       <div className="container flex flex-col min-h-screen ">
-        <div className=" py-10 flex justify-between">
+        <div className=" py-10 flex justify-start items-center">
           <span className="text-4xl font-black text-accent">{headingText}</span>
+          <div className="w-full flex justify-center items-center py-2">
+            <div className="flex w-1/4">
+              <input
+                type="text"
+                id="website-admin"
+                className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="search"
+                value={searchContent}
+                onChange={(e) => {
+                  setSearchContent(e.target.value);
+                }}
+              />
+            </div>
+          </div>
           {type === "draft" && (
-            <button className="btn btn-sm btn-accent hidden lg:flex">
+            <button className="btn btn-sm btn-accent hidden lg:flex w-[180px]">
               <Link to={"/template/draft"}>Add New Template</Link>
             </button>
           )}
-        </div>
-
-        <div className="w-full py-2">
-          <div className="flex w-1/4">
-            <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 rounded-l-md border border-r-0 border-gray-300 dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-              <HiSearch />
-            </span>
-            <input
-              type="text"
-              id="website-admin"
-              className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="search"
-              value={searchContent}
-              onChange={(e) => {
-                setSearchContent(e.target.value);
-              }}
-            />
-          </div>
         </div>
 
         <div className="w-full">
@@ -139,7 +135,14 @@ function DraftListPage(props: any) {
             </div>
           </div>
         </div>
-        {!loading && <TableFooter totalPages={totalPages} page={page} />}
+        {!loading && (
+          <TableFooter
+            totalPages={totalPages}
+            page={page}
+            type={type}
+            search={search}
+          />
+        )}
       </div>
     </div>
   );
