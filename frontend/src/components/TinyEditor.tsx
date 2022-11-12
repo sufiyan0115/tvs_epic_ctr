@@ -74,7 +74,7 @@ const TinyEditor = (props: any) => {
           name: templateName,
           data: contentRef.current!,
         });
-      }, 5000);
+      }, 1000);
       return () => {
         clearInterval(interval);
       };

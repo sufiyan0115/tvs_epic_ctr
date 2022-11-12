@@ -70,7 +70,7 @@ const App = () => {
             ></Route>
             <Route
               path="/template/approved/:id"
-              element={<PreviewRejectedTemplatePage />}
+              element={<PreviewDraftTemplatePage type="approved" />}
             ></Route>
           </Route>
 
