@@ -36,7 +36,7 @@ const BasicForm = (props: any) => {
     formIsValid = true;
   }
 
-  const submitHandler = (event: any) => {
+  const submitHandler = async(event: any) => {
     event.preventDefault();
     if (!formIsValid) {
       return;
@@ -45,7 +45,7 @@ const BasicForm = (props: any) => {
       password: passwordValue,
       email: emailValue,
     };
-    login(values);
+    await login(values);
 
     resetEmail();
     resetPassword();

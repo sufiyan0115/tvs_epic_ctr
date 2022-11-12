@@ -47,13 +47,13 @@ const PreviewDraftTemplatePage = (props: any) => {
   const { user } = useAuth();
   const [name, setName] = useState();
   const navigate = useNavigate();
-  const [errorMessage, setErrorMessage] = useState();
   const [errorOccured, setErrorOccured] = useState(false);
-
+  const [error, setError] = useState<any>();
+  const {type} = props;
   const fetchPreview = async () => {
     try {
       const response = await axios.get(
-        `${API_URL}template/draft/${documentId}`,
+        `${API_URL}template/${type}/${documentId}`,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -64,10 +64,12 @@ const PreviewDraftTemplatePage = (props: any) => {
       setContent(data.data);
       setName(data.name);
     } catch (err: any) {
-      const msg =
-        err?.response?.data?.message.message || "Something went wrong";
+      const msg = {
+        message: err?.response?.data?.message.message || "Something went wrong",
+        code: err?.response?.data?.code,
+      };
       setErrorOccured(true);
-      setErrorMessage(msg);
+      setError(msg);
     }
   };
 
@@ -81,11 +83,40 @@ const PreviewDraftTemplatePage = (props: any) => {
     draftToPreview();
   }, [content]);
 
-  const editClickHandler = () => {
+  const topButtonClickHandler = async () => {
+    if(type==="draft")
     navigate(`/template/draft/${documentId}`);
+    if(type==="rejected")
+    {
+     await sendToDraft();
+    navigate(`/template/draft/${documentId}`);
+    }
+
   };
 
-  const sendForApproval = async () => {
+ let topButtonText = "Edit";
+ if(type==="rejected")
+ topButtonText= "Send to Drafts";
+
+
+const sendToDraft = async () => {
+  try {
+    const response = await axios.post(
+      `${API_URL}template/redraft`,
+      {
+        id: documentId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      }
+    );
+  } catch (err) {
+    console.warn(err);
+  }
+};
+const sendForApproval = async () => {
     try {
       const response = await axios.post(
         `${API_URL}template/submit`,
@@ -103,12 +134,17 @@ const PreviewDraftTemplatePage = (props: any) => {
     }
   };
 
-  const approvalClickHandler = async () => {
+const approvalClickHandler = async () => {
     await sendForApproval();
     navigate(`/template/pending`);
   };
 
-  let pageContent = (
+
+  if (errorOccured) {
+    return <ErrorPage error={error}></ErrorPage>;
+  }
+
+  return (
     <div className="bg-[rgb(248,249,250)]">
       <div>
         <Navbar className="shadow-lg"></Navbar>
@@ -123,10 +159,10 @@ const PreviewDraftTemplatePage = (props: any) => {
           </span>
           <div className="flex items-end  w-2/12">
             <button
-              onClick={editClickHandler}
+              onClick={topButtonClickHandler}
               className="btn btn-sm text-accent border-[rgba(0,0,0,0.1)] transition-all hover:bg-accent hover:text-white  hidden lg:flex w-full"
             >
-              Edit
+              {topButtonText}
             </button>
           </div>
         </div>
@@ -136,21 +172,17 @@ const PreviewDraftTemplatePage = (props: any) => {
             dangerouslySetInnerHTML={{ __html: content }}
           ></div>
         </div>
-        <button
+        {type==="draft" && <button
           onClick={approvalClickHandler}
           className="btn btn-sm mb-8 text-white border-[rgba(0,0,0,0.1)] transition-all bg-accent hover:bg-accentHover hover:text-white  hidden lg:flex"
         >
           Send for Approval
-        </button>
+        </button>}
       </div>
     </div>
   );
 
-  if (errorOccured) {
-    pageContent = <ErrorPage message={errorMessage}></ErrorPage>;
-  }
 
-  return pageContent;
 };
 
 export default PreviewDraftTemplatePage;

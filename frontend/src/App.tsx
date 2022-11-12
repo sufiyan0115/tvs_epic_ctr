@@ -9,6 +9,7 @@ import SignInLayout from "./components/SignIn/SignInLayout";
 import SignUpLayout from "./components/SignUp/SignUpLayout";
 import DraftListPage from "./pages/DraftListPage";
 import PendingListPage from "./pages/PendingListPage";
+import LoadingPage from "./pages/LoadingPage";
 import ProtectedRoute from "./components/utils/ProtectedRoute";
 import { Route, Routes, Navigate } from "react-router-dom";
 import { v4 as uuidV4 } from "uuid";
@@ -30,18 +31,18 @@ const App = () => {
             element={user ? <Navigate replace to={"/"} /> : <SignInLayout />}
           ></Route>
 
-          <Route element={<ProtectedRoute/>} >
+          <Route element={<ProtectedRoute />}>
             <Route
               path="/template/draft"
               element={<Navigate replace to={`/template/draft/${uuidV4()}`} />}
             />
             <Route
               path="/template/draft/preview"
-              element={<DraftListPage />}
+              element={<DraftListPage templateType="draft" />}
             ></Route>
             <Route
               path="/template/draft/preview/:id"
-              element={<PreviewDraftTemplatePage  />}
+              element={<PreviewDraftTemplatePage type="draft" />}
             ></Route>
             <Route
               path="/template/draft/:id"
@@ -49,7 +50,7 @@ const App = () => {
             ></Route>
             <Route
               path="/template/pending"
-              element={<PendingListPage />}
+              element={<DraftListPage templateType="pending" />}
             ></Route>
             <Route
               path="/template/pending/:id"
@@ -57,10 +58,18 @@ const App = () => {
             ></Route>
             <Route
               path="/template/rejected"
-              element={<DraftListPage />}
+              element={<DraftListPage templateType="rejected" />}
             ></Route>
             <Route
               path="/template/rejected/:id"
+              element={<PreviewDraftTemplatePage type="rejected" />}
+            ></Route>
+            <Route
+              path="/template/approved"
+              element={<DraftListPage templateType="approved" />}
+            ></Route>
+            <Route
+              path="/template/approved/:id"
               element={<PreviewRejectedTemplatePage />}
             ></Route>
           </Route>
@@ -69,7 +78,7 @@ const App = () => {
           <Route path="*" element={<LandingPage></LandingPage>}></Route>
         </Routes>
       ) : (
-        <div>Loading...</div>
+        <LoadingPage />
       )}
     </>
   );
