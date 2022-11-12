@@ -1,7 +1,7 @@
 const Hero = () => {
   return (
-    <section className="min-h-[750px] pt-12 pb-0 mt-5 lg:mt-0">
-      <div className="container mx-auto min-h-[720px] flex justify-center items-center">
+    <section className="min-h-[650px] pt-12 pb-0 mt-5 lg:mt-0">
+      <div className="container mx-auto min-h-[650px] flex justify-center items-center">
         <div className="flex flex-col lg:gap-x-[30px] gap-y-8 lg:gap-y-0 lg:flex-row items-center justify-center text-center lg:text-left">
           <div className="flex-1">
             <h1

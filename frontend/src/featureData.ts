@@ -1,3 +1,10 @@
+export const nav = [
+  { name: "New Template", href: "/template/draft" },
+  { name: "Drafts", href: "/template/draft/preview" },
+  { name: "Pending", href: "/template/pending" },
+  { name: "Approved", href: "/template/approved" },
+  { name: "Rejected", href: "/template/rejected" },
+];
 
 export const features = {
   feature1: {

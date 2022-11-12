@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { API_URL } from "../config/constants";
 import { useAuth } from "../hooks/useAuth";
+import Navbar from "../components/Navbar";
 
 function DraftListPage() {
   const navigate = useNavigate();
@@ -28,8 +29,11 @@ function DraftListPage() {
     fetchDraftList();
   }, []);
   return (
-    <div className="w-full flex justify-center">
-      <div className="container flex flex-col min-h-screen ">
+    <div className="w-full flex flex-col items-center justify-center">
+      <div className="w-full">
+        <Navbar></Navbar>
+      </div>
+      <div className="container flex flex-col min-h-screen">
         <div className=" py-10 flex justify-between">
           <span className="text-4xl font-black text-accent">Drafts</span>
           <button className="btn btn-sm btn-accent hidden lg:flex">
@@ -81,7 +85,7 @@ function DraftListPage() {
                               key={draft.id}
                               className="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100 cursor-pointer"
                               onClick={() => {
-                                navigate(`/template/draft/preview/${draft.id}`);
+                                navigate(`/template/draft/${draft.id}`);
                               }}
                             >
                               <td className="px-6 py-4 text-sm font-medium whitespace-nowrap text-gray-900">
