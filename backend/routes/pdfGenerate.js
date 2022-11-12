@@ -10,9 +10,7 @@ const ExceptionHandler = require("../core/ExceptionHandler");
 
 router.get("/", async (req, res) => {
   try {
-    const html = await ejs.renderFile(
-      path.join(__dirname, "..", "views", "test.ejs")
-    );
+    const { html } = req.body;
     const pdf = await generatePdf(html);
     fs.writeFileSync(
       path.join(__dirname, "..", "test", "normal", "normal_data.pdf"),
