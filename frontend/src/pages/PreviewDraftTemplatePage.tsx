@@ -65,8 +65,8 @@ const PreviewDraftTemplatePage = (props: any) => {
         }
       );
       const data = response.data;
-
-      // setFeedback(data.feedback)
+        console.log(data)
+      setFeedback(data.feedback)
       setContent(data.data);
       setName(data.name);
     } catch (err: any) {
@@ -225,13 +225,13 @@ const PreviewDraftTemplatePage = (props: any) => {
           </div>
         </div>
 
-        {feedback!=="" && (
+         {feedback && feedback.trim().length!==0 && (
           <div className="w-[892px] items-end flex-col flex mb-5">
             <div
               placeholder="Please provide feedback"
               className="px-5 py-3 mx-2 mt-2  w-[870px] text-xl min-h-[150px] border-2 border-[rgba(0,0,0,0.1)] bg-[rgb(248,249,250)] outline-none  "
             >
-              <h3 className="font-bold ">Feedback from Admin</h3> 
+              <h3 className="font-bold  my-3">Feedback from Admin</h3> 
              {feedback} </div>
           </div>
         )}

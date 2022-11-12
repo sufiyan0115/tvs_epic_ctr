@@ -48,6 +48,7 @@ io.on("connection", (socket) => {
         name: template.name,
         data: template.data,
         status: template.status,
+        feedback: template.feedback
       });
       socket.on("save-document", async (res) => {
         const { name, data } = res;

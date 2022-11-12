@@ -89,7 +89,7 @@ function DraftListPage(props: any) {
           <span className="text-4xl font-black text-accent">{headingText}</span>
           <div className="w-full flex justify-center items-center py-2">
             <div className="flex w-1/4">
-              <input
+              {/* <input
                 type="text"
                 id="website-admin"
                 className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -98,7 +98,38 @@ function DraftListPage(props: any) {
                 onChange={(e) => {
                   setSearchContent(e.target.value);
                 }}
-              />
+              /> */}
+              <div className="w-full mx-auto">
+                <div className="relative flex items-center w-full h-12 rounded-lg focus-within:shadow-lg bg-gray-100 overflow-hidden">
+                  <div className="grid place-items-center h-full w-12 text-gray-300">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      />
+                    </svg>
+                  </div>
+
+                  <input
+                    className="peer h-full w-full outline-none text-sm text-gray-700 pr-2 bg-gray-100"
+                    type="text"
+                    id="search"
+                    placeholder="Search templates.."
+                    value={searchContent}
+                    onChange={(e) => {
+                      setSearchContent(e.target.value);
+                    }}
+                  />
+                </div>
+              </div>
             </div>
           </div>
           {type === "draft" && (
