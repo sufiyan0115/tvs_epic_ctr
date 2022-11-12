@@ -2,9 +2,18 @@ import React from "react";
 import { Link } from "react-router-dom";
 const copyright = {
   social: [
-    { icon: "/img/copyright/facebook.svg", href: "https://www.facebook.com/TVSCREDIT/" },
-    { icon: "/img/copyright/twitter.svg", href: "https://twitter.com/TVSCredit" },
-    { icon: "/img/copyright/linkedin.svg", href: "https://www.linkedin.com/company/tvs-credit-services-ltd-/" },
+    {
+      icon: "/img/copyright/facebook.svg",
+      href: "https://www.facebook.com/TVSCREDIT/",
+    },
+    {
+      icon: "/img/copyright/twitter.svg",
+      href: "https://twitter.com/TVSCredit",
+    },
+    {
+      icon: "/img/copyright/linkedin.svg",
+      href: "https://www.linkedin.com/company/tvs-credit-services-ltd-/",
+    },
   ],
 };
 
@@ -22,7 +31,7 @@ const Copyright = () => {
           Privacy & Terms
         </Link>
       </div>
-      <div>Copyright @ 2022 TVS</div>
+      <div>Copyright @ 2022 TVS CREDIT</div>
       <ul className="flex gap-x-[12px]">
         {social.map((item, index) => {
           const { href, icon } = item;

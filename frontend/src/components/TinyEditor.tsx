@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { toast } from "react-toastify";
+import { apiKey } from "../config/constants";
 
 const TinyEditor = (props: any) => {
   const [content, _setContent] = useState(" ");
@@ -21,6 +22,7 @@ const TinyEditor = (props: any) => {
   const [isDraft, setIsDraft] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [feedback, setFeedback] = useState("");
 
   const displayError = (err: any) => {
     const message = err?.response?.data?.message || "Something went wrong";
@@ -34,7 +36,7 @@ const TinyEditor = (props: any) => {
 
   useEffect(() => {
     try {
-      const s = io("http://localhost:3000");
+      const s = io("/");
       setSocket(s);
       return () => {
         s.disconnect();
@@ -54,9 +56,10 @@ const TinyEditor = (props: any) => {
         console.log(document);
         setIsLoading(false);
         console.log(document);
-        if (document.status === "Draft" ) setIsDraft(true);
+        if (document.status === "Draft") setIsDraft(true);
         setContent(document.data);
         setTemplateName(document.name);
+        setFeedback(document.feedback);
       });
       socket.emit("get-document", { id: documentId, user });
     } catch (err) {
@@ -117,9 +120,21 @@ const TinyEditor = (props: any) => {
           </button>
         </div>
       </div>
+        {feedback && feedback.trim().length !== 0 && (
+          <div className="w-[892px] items-end flex-col flex mb-5">
+            <div
+              placeholder="Please provide feedback"
+              className="px-5 py-3 mx-2 mt-2  w-[880px] text-xl min-h-[150px] border-2 border-[rgba(0,0,0,0.1)] bg-[rgb(248,249,250)] outline-none  "
+            >
+              <h3 className="font-bold  my-3">Feedback from Admin</h3>
+              {feedback}{" "}
+            </div>
+          </div>
+        )}
+
       <Editor
         ref={editorRef}
-        apiKey="q1l0wbw69iya46bmue4pwj4o4si6utmsxxt5eqc8ppifonkn"
+        apiKey={apiKey}
         disabled={isLoading || !isDraft}
         value={
           isLoading
