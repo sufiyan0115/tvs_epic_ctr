@@ -17,7 +17,7 @@ const templateMapper = {
   archived: ArchivedTemplate,
 };
 
-router.post("/redraft", async (req, res) => {
+router.post("/redraft", auth.authenticate, async (req, res) => {
   try {
     const { id } = req.body;
     let template = await Template.findOne({ id });
@@ -187,7 +187,13 @@ router.get("/:name", auth.authenticate, async (req, res) => {
       .find(queryObject)
       .limit(limit)
       .skip(skip);
-    res.json(templates);
+    let totalPages = await templateMapper[name].countDocuments(queryObject);
+    totalPages = Math.ceil(totalPages / limit);
+    const response = {
+      data: templates,
+      totalPages,
+    };
+    res.json(response);
   } catch (err) {
     const e = ExceptionHandler(err);
     res.status(e.code).json(e);
@@ -202,6 +208,10 @@ router.delete("/draft/:id", auth.authenticate, async (req, res) => {
       throw new ResourceNotFoundException({ resouceName: "Template" });
     if (!template.owner._id.equals(req.user._id))
       throw new UnauthorisedException({ message: "Unauthorised User" });
+    if (template.status !== "Draft")
+      throw new ResourceNotFoundException({
+        message: `This template is not present in Draft `,
+      });
     await Template.findOneAndDelete({ id });
     res.send("Deleted");
   } catch (err) {
