@@ -1,7 +1,7 @@
 const BaseException = require("../core/BaseException");
 
 class ResourceNotFoundException extends BaseException {
-  constructor(message, resourceName) {
+  constructor({ message, resourceName }) {
     super({
       message:
         message || "The requested resource " + resourceName + " was not found.",
