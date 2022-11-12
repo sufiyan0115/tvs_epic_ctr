@@ -125,7 +125,7 @@ router.post(
       if (!template)
         throw new ResourceNotFoundException({ resouceName: "Template" });
       template.status = "Rejected";
-      template.rejectMessage = feedback;
+      template.feedback = feedback;
       template.time = Date.now();
       await template.save();
       res.json(template);

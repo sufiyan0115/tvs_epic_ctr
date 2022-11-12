@@ -8,7 +8,7 @@ const { generatePdf } = require("../utils/pdfGenerator");
 const encryptPdf = require("../hummus");
 const ExceptionHandler = require("../core/ExceptionHandler");
 
-router.get("/", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const { html } = req.body;
     const pdf = await generatePdf(html);

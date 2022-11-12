@@ -13,7 +13,7 @@ const schema = new Schema(
       type: String,
       required: true,
     },
-    rejectMessage: String,
+    feedback: String,
   },
   opts
 );
