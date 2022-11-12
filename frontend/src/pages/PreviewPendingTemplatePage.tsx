@@ -5,7 +5,7 @@ import ErrorPage from "./ErrorPage";
 import axios from "axios";
 import { useAuth } from "../hooks/useAuth";
 import { API_URL } from "../config/constants";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/Navbar"
 import "./PreviewTemplatePage.css";
 
 const draftToPreview = () => {

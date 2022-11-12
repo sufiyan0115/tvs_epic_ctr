@@ -54,7 +54,7 @@ const TinyEditor = (props: any) => {
         console.log(document);
         setIsLoading(false);
         console.log(document);
-        if (document.status === "Draft") setIsDraft(true);
+        if (document.status === "Draft" ) setIsDraft(true);
         setContent(document.data);
         setTemplateName(document.name);
       });
