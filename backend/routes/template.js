@@ -59,7 +59,7 @@ router.post("/submit", auth.authenticate, async (req, res) => {
 router.post(
   "/approve",
   auth.authenticate,
-  //   auth.verifyAdmin,
+  auth.verifyAdmin,
   async (req, res) => {
     try {
       const { id } = req.body;
@@ -117,7 +117,7 @@ router.post(
 router.post(
   "/reject",
   auth.authenticate,
-  //auth.verifyAdmin,
+  auth.verifyAdmin,
   async (req, res) => {
     try {
       const { id, feedback } = req.body;
@@ -135,6 +135,20 @@ router.post(
     }
   }
 );
+router.get("/archive/:id/:version", auth.authenticate, async (req, res) => {
+  try {
+    const { id, version } = req.params;
+    const template = await ArchivedTemplate.findOne({ id, version });
+    if (!template)
+      throw new ResourceNotFoundException({ resourceName: "Template" });
+    if (!template.owner._id.equals(req.user._id))
+      throw new UnauthorisedException({ message: "Unauthorised User" });
+    res.json(template);
+  } catch (err) {
+    const e = ExceptionHandler(err);
+    res.status(e.code).json(e);
+  }
+});
 router.get("/:name/:id", auth.authenticate, async (req, res) => {
   try {
     const { name, id } = req.params;
