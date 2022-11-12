@@ -4,6 +4,7 @@ import { io } from "socket.io-client";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import { toast } from "react-toastify";
 
 const TinyEditor = (props: any) => {
   const [content, _setContent] = useState(" ");
@@ -21,53 +22,74 @@ const TinyEditor = (props: any) => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
+  const displayError = (err: any) => {
+    const message = err?.response?.data?.message || "Something went wrong";
+    toast.error(message, {
+      position: "top-right",
+      autoClose: 1000,
+      closeOnClick: true,
+      progress: undefined,
+    });
+  };
+
   useEffect(() => {
-    const s = io("http://localhost:3000");
-    setSocket(s);
-    return () => {
-      s.disconnect();
-    };
+    try {
+      const s = io("http://localhost:3000");
+      setSocket(s);
+      return () => {
+        s.disconnect();
+      };
+    } catch (err: any) {
+      console.log(err);
+      displayError(err);
+    }
   }, []);
+
   useEffect(() => {
     if (socket == null || user == null) return;
 
-    socket.once("load-document", (document: any) => {
-      console.log(isLoading);
-      console.log(document);
-      setIsLoading(false);
-      console.log(document)
-      if(document.status==="Draft")
-      setIsDraft(true);
-      setContent(document.data);
-      setTemplateName(document.name);
-    });
-
-    socket.emit("get-document", { id: documentId, user });
+    try {
+      socket.once("load-document", (document: any) => {
+        console.log(isLoading);
+        console.log(document);
+        setIsLoading(false);
+        console.log(document);
+        if (document.status === "Draft" ) setIsDraft(true);
+        setContent(document.data);
+        setTemplateName(document.name);
+      });
+      socket.emit("get-document", { id: documentId, user });
+    } catch (err) {
+      displayError(err);
+    }
   }, [socket, documentId, user]);
 
   useEffect(() => {
     if (socket == null) return;
     if (isLoading) return;
 
-    const interval = setInterval(() => {
-      socket.emit("save-document", {
-        name: templateName,
-        data: contentRef.current!,
-      });
-    }, 5000);
-
-    return () => {
-      clearInterval(interval);
-    };
+    try {
+      const interval = setInterval(() => {
+        socket.emit("save-document", {
+          name: templateName,
+          data: contentRef.current!,
+        });
+      }, 5000);
+      return () => {
+        clearInterval(interval);
+      };
+    } catch (err) {
+      displayError(err);
+    }
   }, [socket, isLoading, templateName]);
 
   const handleChange = (content: string, editor: any) => {
     setContent(content);
   };
 
-  const handleSubmit = (event: any) => {
+  const handlePreview = (event: any) => {
     event.preventDefault();
-    navigate(`/template/draft/preview/${documentId}`)
+    navigate(`/template/draft/preview/${documentId}`);
   };
 
   const templateNameChangeHandler = (event: any) => {
@@ -76,12 +98,11 @@ const TinyEditor = (props: any) => {
   };
 
   return (
-    <div
-      className="px-7 pt-2 flex items-center flex-col "
-    >
+    <div className="px-7 pt-2 flex items-center flex-col ">
       <div className="flex w-[892px] ">
         <input
           onChange={templateNameChangeHandler}
+          disabled={isLoading || !isDraft}
           className="w-10/12  bg-[rgb(248,249,250)]  my-4 templateNameInput text-3xl font-bold p-2 border-[rgba(0,0,0,0.1)] border-solid border-b-2 focus:outline-none"
           value={templateName}
           placeholder="Template Name"
@@ -90,7 +111,7 @@ const TinyEditor = (props: any) => {
           <button
             type="submit"
             className="flex btn btn-sm text-accent border-[rgba(0,0,0,0.1)] transition-all hover:bg-accent hover:text-white  lg:flex w-full"
-            onClick={handleSubmit}
+            onClick={handlePreview}
           >
             Preview
           </button>
@@ -118,7 +139,7 @@ const TinyEditor = (props: any) => {
               }
             });
           },
-          plugins: "  image  lists  table fullscreen link" ,
+          plugins: "  image  lists  table fullscreen link",
           external_plugins: {
             inputField: "/tinymce/inputField.js",
           },

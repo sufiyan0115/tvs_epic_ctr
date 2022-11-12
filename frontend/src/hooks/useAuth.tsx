@@ -5,10 +5,10 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { API_URL } from "../config/constants";
 
-const AuthContext = createContext({
+const AuthContext = createContext<any>({
   auth: false,
   setAuth: (a: any) => {},
-  user: {},
+  user: null,
   setUser: (a: any) => {},
   login: (values: {}) => {},
   register: (values: {}) => {},

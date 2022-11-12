@@ -19,7 +19,7 @@ const LandingPage = () => {
       <Hero />
       <RightFeature content={features.feature1} />
       <LeftFeature content={features.feature2} />
-      <RightFeature content={features.feature3} />
+      <RightFeature content={features.feature3} imgoffset="400" paraoffset="500" />
       <Footer />
     </div>
   );
