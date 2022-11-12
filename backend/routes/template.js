@@ -141,7 +141,7 @@ router.get("/:name/:id", auth.authenticate, async (req, res) => {
     const template = await templateMapper[name].findOne({ id });
     if (!template)
       throw new ResourceNotFoundException({ resourceName: "Template" });
-    if (!template.owner._id.equals(req.user._id))
+    if (!req.user.isAdmin && !template.owner._id.equals(req.user._id))
       throw new UnauthorisedException({
         message: "You don't own this Template",
       });
@@ -166,9 +166,10 @@ router.get("/:name", auth.authenticate, async (req, res) => {
     const opt = new RegExp(`${search}`);
     let skip = (page - 1) * limit;
     if (skip < 0) skip = 0;
-    const queryObject = {
+    let queryObject = {
       owner: req.user._id,
     };
+    if (name !== "draft" && req.user.isAdmin) queryObject = {};
     if (search && search.length > 0) {
       queryObject.name = { $regex: opt, $options: "i" };
     }
