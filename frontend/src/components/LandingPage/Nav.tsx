@@ -1,18 +1,12 @@
 import React from "react";
 
 import { Link } from "react-router-dom";
-export const nav = [
-  { name: "New Template", href: "/template/draft" },
-  { name: "Drafts", href: "/template/draft/preview" },
-  { name: "Pending", href: "/template/pending" },
-  { name: "Approved", href: "/" },
-  {name: 'Rejected',href:'/'}
+import {nav} from "../../featureData";
 
-];
 
-const Nav = () => {
+const Nav = (props:any) => {
   return (
-    <nav>
+    <nav className={`${props.className}`}>
       <ul className="flex gap-x-10">
         {nav.map((item, index) => {
           const { href, name } = item;

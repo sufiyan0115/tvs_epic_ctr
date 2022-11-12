@@ -34,7 +34,7 @@
       @apply text-lg text-dark;
     }
     .section {
-      @apply pt-8 lg:pt-[50px] pb-14 ;
+      @apply  pb-14 ;
     }
     .btn {
       @apply rounded-lg transition flex justify-center items-center;

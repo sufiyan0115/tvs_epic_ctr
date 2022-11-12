@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../hooks/useAuth";
 import { API_URL } from "../config/constants";
+import Navbar from "../components/Navbar";
 import ErrorPage from "./ErrorPage";
 import "./PreviewTemplatePage.css";
 
@@ -63,18 +64,18 @@ const PreviewDraftTemplatePage = (props: any) => {
       setContent(data.data);
       setName(data.name);
     } catch (err: any) {
-      const  msg = err?.response?.data?.message.message || "Something went wrong";
+      const msg =
+        err?.response?.data?.message.message || "Something went wrong";
       setErrorOccured(true);
       setErrorMessage(msg);
     }
   };
 
-
   useEffect(() => {
     fetchPreview();
   }, []);
 
-  console.log("omw to render")
+  console.log("omw to render");
 
   useEffect(() => {
     draftToPreview();
@@ -107,45 +108,47 @@ const PreviewDraftTemplatePage = (props: any) => {
     navigate(`/template/pending`);
   };
 
-  let pageContent =  (
-    <div className="px-7 pt-2 flex items-center flex-col bg-[rgb(248,249,250)]  min-h-screen">
-      <div className="flex items-center w-[892px] ">
-        <span
-          className="w-10/12  bg-[rgb(248,249,250)]  my-4 templateNameInput text-3xl font-bold p-2 border-[rgba(0,0,0,0.1)] border-solid border-b-2 focus:outline-none"
-          placeholder="Template Name"
-        >
-          {name}
-        </span>
-        <div className="flex items-end  w-2/12">
-          <button
-            onClick={editClickHandler}
-            className="btn btn-sm text-accent border-[rgba(0,0,0,0.1)] transition-all hover:bg-accent hover:text-white  hidden lg:flex w-full"
+  let pageContent = (
+    <div className="bg-[rgb(248,249,250)]">
+      <div>
+        <Navbar className="shadow-lg"></Navbar>
+      </div>
+      <div className="px-7 pt-2 flex items-center flex-col bg-[rgb(248,249,250)]  min-h-screen">
+        <div className="flex items-center w-[892px] ">
+          <span
+            className="w-10/12  bg-[rgb(248,249,250)]  my-4 templateNameInput text-3xl font-bold p-2 border-[rgba(0,0,0,0.1)] border-solid border-b-2 focus:outline-none"
+            placeholder="Template Name"
           >
-            Edit
-          </button>
+            {name}
+          </span>
+          <div className="flex items-end  w-2/12">
+            <button
+              onClick={editClickHandler}
+              className="btn btn-sm text-accent border-[rgba(0,0,0,0.1)] transition-all hover:bg-accent hover:text-white  hidden lg:flex w-full"
+            >
+              Edit
+            </button>
+          </div>
         </div>
+        <div className="bg-white mb-8 rounded shadow-lg">
+          <div
+            className={`mce-content-body  bg-white`}
+            dangerouslySetInnerHTML={{ __html: content }}
+          ></div>
+        </div>
+        <button
+          onClick={approvalClickHandler}
+          className="btn btn-sm mb-8 text-white border-[rgba(0,0,0,0.1)] transition-all bg-accent hover:bg-accentHover hover:text-white  hidden lg:flex"
+        >
+          Send for Approval
+        </button>
       </div>
-      <div className="bg-white mb-8 rounded shadow-lg">
-        <div
-          className={`mce-content-body  bg-white`}
-          dangerouslySetInnerHTML={{ __html: content }}
-        ></div>
-      </div>
-      <button
-        onClick={approvalClickHandler}
-        className="btn btn-sm mb-8 text-white border-[rgba(0,0,0,0.1)] transition-all bg-accent hover:bg-accentHover hover:text-white  hidden lg:flex"
-      >
-        Send for Approval
-      </button>
     </div>
   );
 
-  if(errorOccured)
-  {
-    // pageContent = <ErrorPage message={erro rMessage}></ErrorPage>
-    pageContent = <ErrorPage message={errorMessage}></ErrorPage>
+  if (errorOccured) {
+    pageContent = <ErrorPage message={errorMessage}></ErrorPage>;
   }
-
 
   return pageContent;
 };

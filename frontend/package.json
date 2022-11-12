@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.4",
     "@mantine/core": "^5.7.1",
     "@mantine/form": "^5.7.1",
     "@mantine/hooks": "^5.7.1",

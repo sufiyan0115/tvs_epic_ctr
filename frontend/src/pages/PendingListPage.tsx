@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { API_URL } from "../config/constants";
 import { useAuth } from "../hooks/useAuth";
+import Navbar from "../components/Navbar";
 
 function PendingListPage() {
   const navigate = useNavigate();
@@ -29,10 +30,16 @@ function PendingListPage() {
     fetchPendingList();
   }, []);
   return (
-    <div className="w-full flex justify-center">
+    <div className="w-full flex flex-col items-center justify-center">
+      <div className="w-full">
+        <Navbar></Navbar>
+      </div>
+
       <div className="container flex flex-col min-h-screen ">
         <div className=" py-10 flex justify-between">
-          <span className="text-4xl font-black text-accent">Pending Templates</span>
+          <span className="text-4xl font-black text-accent">
+            Pending Templates
+          </span>
         </div>
 
         <div className="w-full">

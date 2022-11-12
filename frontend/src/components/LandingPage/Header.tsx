@@ -35,13 +35,13 @@ const Header = () => {
         <div data-aos="fade-down" data-aos-delay="1000">
           <img width="168" height="60" src="/img/header/logo.png" alt="" />
         </div>
-        <div
+        {user && <div
           className="hidden lg:flex"
           data-aos="fade-down"
           data-aos-delay="1200"
         >
           <Nav />
-        </div>
+        </div>}
         <button
           className="btn btn-sm btn-outline hidden lg:flex"
           data-aos="fade-down"
