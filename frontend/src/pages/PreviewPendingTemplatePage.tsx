@@ -5,7 +5,7 @@ import ErrorPage from "./ErrorPage";
 import axios from "axios";
 import { useAuth } from "../hooks/useAuth";
 import { API_URL } from "../config/constants";
-import Navbar from "../components/Navbar"
+import Navbar from "../components/Navbar";
 import "./PreviewTemplatePage.css";
 
 const draftToPreview = () => {
@@ -45,6 +45,8 @@ const PreviewPendingTemplatePage = (props: any) => {
   const { id: documentId } = useParams();
   const { user } = useAuth();
   const [name, setName] = useState();
+  const [textarea, setTextarea] = useState(false);
+  const [feedback, setFeedback] = useState("");
   const navigate = useNavigate();
 
   let errorOccured = false,
@@ -100,6 +102,7 @@ const PreviewPendingTemplatePage = (props: any) => {
         `${API_URL}template/reject`,
         {
           id: documentId,
+          feedback
         },
         {
           headers: {
@@ -112,11 +115,23 @@ const PreviewPendingTemplatePage = (props: any) => {
     }
   };
 
-
-  const rejectionClickHanlder = async()=>{
-    if (!user.isAdmin) return;
+  const rejectionReqHandler = async () => {
     await rejectTemplate();
     navigate(`/template/rejected`);
+  };
+
+  const feedbackCloseHandler = async () => {
+    setTextarea(false);
+  };
+
+  const rejectionClickHanlder = async () => {
+    if (!user.isAdmin) return;
+    console.log("here dfad");
+    setTextarea(true);
+  };
+
+  const feedbackChangeHandler =(e:any)=>{
+    setFeedback(e.target.value);
   }
 
   const approvalClickHandler = async () => {
@@ -127,6 +142,8 @@ const PreviewPendingTemplatePage = (props: any) => {
 
   const nameClass =
     " bg-[rgb(248,249,250)]  my-4 templateNameInput text-3xl font-bold p-2 border-[rgba(0,0,0,0.1)] border-solid border-b-2 focus:outline-none";
+
+  console.log(textarea);
 
   let pageContent = (
     <div>
@@ -158,6 +175,25 @@ const PreviewPendingTemplatePage = (props: any) => {
             </div>
           )}
         </div>
+
+        {textarea && (
+          <div className="w-[892px] items-end flex-col flex border-2 border-black">
+            <textarea
+              onChange={feedbackChangeHandler}
+              placeholder="Please provide feedback"
+              className="px-5 py-3 mx-2 mt-2  w-[870px] text-xl min-h-[150px] border-2 border-[rgba(0,0,0,0.1)] bg-[rgb(248,249,250)] outline-none  "
+            ></textarea>
+            <div className="mx-2">
+              <button onClick={feedbackCloseHandler} className="rounded-md my-4 mx-3 text-white bg-cyan-800 px-4 py-2 border-2 border-[rgba(0,0,0,0.1)]">
+                Close
+              </button>
+              <button onClick={rejectionReqHandler} className="rounded-md my-4 text-white bg-red-500 px-4 py-2 border-2 border-[rgba(0,0,0,0.1)]">
+                Reject
+              </button>
+            </div>
+          </div>
+        )}
+
         <div className="bg-white mb-8 rounded shadow-lg">
           <div
             className={`mce-content-body  bg-white`}
